@@ -1,0 +1,34 @@
+Mandelbrot:
+  FractalParameters:
+    Algorithm: Mandelbrot
+    Power: 2.0
+    Bailout: 16.0
+    MaxIterations: 350
+  ViewParameters:
+    Zoom: 1.8
+    Position: [0.0, 0.0]
+    Rotation: 0.0
+  JuliaParameters:
+    JuliaMode: true
+    JuliaC: [-0.79, 0.15]
+  ColoringParameters:
+    ExteriorColoring: Smooth
+    InteriorColoring: Black
+    InteriorColor: [0, 0, 0]
+    ColorFrequency: 2.0
+    ColorOffset: 0.3
+    OrbitColoring: false
+    DistanceScale: 50
+    ColorPalette:
+      Colors:
+        - [0.01, 0.02, 0.0]
+        - [0.1, 0.3, 0.05]
+        - [0.5, 0.8, 0.1]
+        - [0.9, 1.0, 0.5]
+        - [0.0, 0.0, 0.0]
+  OrbitTrap:
+    Type: None
+    P1: [0, 0]
+    P2: [0.5, 0.5]
+    Color: [1, 1, 0]
+    Blend: 0.5

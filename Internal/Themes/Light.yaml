@@ -1,0 +1,86 @@
+Theme:
+  Style:
+    Alpha: 1
+    DisabledAlpha: 0.600000024
+    WindowPadding: [8, 8]
+    WindowRounding: 0
+    WindowBorderSize: 1
+    WindowMinSize: [32, 32]
+    WindowTitleAlign: [0, 0.5]
+    WindowMenuButtonPosition: Left
+    ChildRounding: 0
+    ChildBorderSize: 1
+    PopupRounding: 0
+    PopupBorderSize: 1
+    FramePadding: [4, 3]
+    FrameRounding: 0
+    FrameBorderSize: 0
+    ItemSpacing: [8, 4]
+    ItemInnerSpacing: [4, 4]
+    CellPadding: [4, 2]
+    IndentSpacing: 21
+    ColumnsMinSpacing: 6
+    ScrollbarSize: 14
+    ScrollbarRounding: 9
+    GrabMinSize: 10
+    GrabRounding: 0
+    TabRounding: 4
+    TabBorderSize: 0
+    TabMinWidthForCloseButton: 0
+    ColorButtonPosition: Right
+    ButtonTextAlign: [0.5, 0.5]
+    SelectableTextAlign: [0, 0]
+  Colors:
+    Text: [0, 0, 0, 1]
+    TextDisabled: [0.600000024, 0.600000024, 0.600000024, 1]
+    WindowBg: [0.937254906, 0.937254906, 0.937254906, 1]
+    ChildBg: [0, 0, 0, 0]
+    PopupBg: [1, 1, 1, 0.980000019]
+    Border: [0, 0, 0, 0.300000012]
+    BorderShadow: [0, 0, 0, 0]
+    FrameBg: [1, 1, 1, 1]
+    FrameBgHovered: [0.258823544, 0.588235319, 0.97647059, 0.400000006]
+    FrameBgActive: [0.258823544, 0.588235319, 0.97647059, 0.670000017]
+    TitleBg: [0.956862748, 0.956862748, 0.956862748, 1]
+    TitleBgActive: [0.819607854, 0.819607854, 0.819607854, 1]
+    TitleBgCollapsed: [1, 1, 1, 0.50999999]
+    MenuBarBg: [0.858823538, 0.858823538, 0.858823538, 1]
+    ScrollbarBg: [0.97647059, 0.97647059, 0.97647059, 0.529999971]
+    ScrollbarGrab: [0.686274529, 0.686274529, 0.686274529, 0.800000012]
+    ScrollbarGrabHovered: [0.486274511, 0.486274511, 0.486274511, 0.800000012]
+    ScrollbarGrabActive: [0.486274511, 0.486274511, 0.486274511, 1]
+    CheckMark: [0.258823544, 0.588235319, 0.97647059, 1]
+    SliderGrab: [0.258823544, 0.588235319, 0.97647059, 0.779999971]
+    SliderGrabActive: [0.458823532, 0.53725493, 0.800000012, 0.600000024]
+    Button: [0.258823544, 0.588235319, 0.97647059, 0.400000006]
+    ButtonHovered: [0.258823544, 0.588235319, 0.97647059, 1]
+    ButtonActive: [0.0588235296, 0.529411793, 0.97647059, 1]
+    Header: [0.258823544, 0.588235319, 0.97647059, 0.310000002]
+    HeaderHovered: [0.258823544, 0.588235319, 0.97647059, 0.800000012]
+    HeaderActive: [0.258823544, 0.588235319, 0.97647059, 1]
+    Separator: [0.388235301, 0.388235301, 0.388235301, 0.620000005]
+    SeparatorHovered: [0.137254909, 0.43921569, 0.800000012, 0.779999971]
+    SeparatorActive: [0.137254909, 0.43921569, 0.800000012, 1]
+    ResizeGrip: [0.349019617, 0.349019617, 0.349019617, 0.170000002]
+    ResizeGripHovered: [0.258823544, 0.588235319, 0.97647059, 0.670000017]
+    ResizeGripActive: [0.258823544, 0.588235319, 0.97647059, 0.949999988]
+    Tab: [0.760784328, 0.796078444, 0.835294127, 0.930999994]
+    TabHovered: [0.258823544, 0.588235319, 0.97647059, 0.800000012]
+    TabActive: [0.592156887, 0.725490212, 0.882352948, 1]
+    TabUnfocused: [0.917647064, 0.925490201, 0.933333337, 0.986199975]
+    TabUnfocusedActive: [0.741176486, 0.819607854, 0.913725495, 1]
+    PlotLines: [0.388235301, 0.388235301, 0.388235301, 1]
+    PlotLinesHovered: [1, 0.427450985, 0.349019617, 1]
+    PlotHistogram: [0.898039222, 0.698039234, 0, 1]
+    PlotHistogramHovered: [1, 0.447058827, 0, 1]
+    TableHeaderBg: [0.776470602, 0.866666675, 0.97647059, 1]
+    TableBorderStrong: [0.568627477, 0.568627477, 0.639215708, 1]
+    TableBorderLight: [0.678431392, 0.678431392, 0.737254918, 1]
+    TableRowBg: [0, 0, 0, 0]
+    TableRowBgAlt: [0.298039228, 0.298039228, 0.298039228, 0.0900000036]
+    TextSelectedBg: [0.258823544, 0.588235319, 0.97647059, 0.349999994]
+    DragDropTarget: [0.258823544, 0.588235319, 0.97647059, 0.949999988]
+    NavHighlight: [0.258823544, 0.588235319, 0.97647059, 0.800000012]
+    NavWindowingHighlight: [0.698039234, 0.698039234, 0.698039234, 0.699999988]
+    NavWindowingDimBg: [0.200000003, 0.200000003, 0.200000003, 0.200000003]
+    ModalWindowDimBg: [0.200000003, 0.200000003, 0.200000003, 0.349999994]

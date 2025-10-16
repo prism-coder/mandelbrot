@@ -1,0 +1,25 @@
+Settings:
+  Application:
+    Name: Mandelbrot++
+    Version:
+      Major: 1
+      Minor: 0
+      Patch: 0
+    Maximized: true
+    DebugMode: false
+    EscapeClosesApp: false
+  Editor:
+    Appearance:
+      Theme: Excellency
+      FontSize: 14
+      UIScale: 1.125
+      ColumnWidth: 200
+    AutoSaveInterval: 10
+  Rendering:
+    Engine: OpenGL
+    Resolution:
+      Width: 1920
+      Height: 1080
+      Scale: 1
+    Fullscreen: false
+    VSync: false

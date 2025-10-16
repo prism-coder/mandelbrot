@@ -1,0 +1,71 @@
+Theme:
+  Style:
+    Alpha: 1.0
+    DisabledAlpha: 0.6
+    WindowPadding: [8.0, 8.0]
+    WindowRounding: 6.0
+    WindowBorderSize: 1.0
+    WindowMinSize: [32.0, 32.0]
+    WindowTitleAlign: [0.0, 0.5]
+    WindowMenuButtonPosition: "Left"
+    ChildRounding: 6.0
+    ChildBorderSize: 1.0
+    PopupRounding: 6.0
+    PopupBorderSize: 1.0
+    FramePadding: [6.0, 6.0]
+    FrameRounding: 6.0
+    FrameBorderSize: 1.0
+    ItemSpacing: [8.0, 5.0]
+    ItemInnerSpacing: [4.0, 4.0]
+    CellPadding: [4.0, 2.0]
+    IndentSpacing: 20.0
+    ScrollbarSize: 14.0
+    ScrollbarRounding: 7.0
+    GrabMinSize: 12.0
+    GrabRounding: 6.0
+    TabRounding: 6.0
+    TabBorderSize: 1.0
+    ColorButtonPosition: "Right"
+    ButtonTextAlign: [0.5, 0.5]
+    SelectableTextAlign: [0.0, 0.0]
+  Colors:
+    Text: [0.1, 0.1, 0.1, 1.0]
+    TextDisabled: [0.6, 0.6, 0.6, 1.0]
+    WindowBg: [0.96, 0.96, 0.95, 1.0]
+    ChildBg: [1.0, 1.0, 1.0, 1.0]
+    PopupBg: [0.98, 0.98, 0.97, 1.0]
+    Border: [0.85, 0.85, 0.84, 1.0]
+    BorderShadow: [0.0, 0.0, 0.0, 0.0]
+    FrameBg: [0.92, 0.92, 0.91, 1.0]
+    FrameBgHovered: [0.88, 0.88, 0.87, 1.0]
+    FrameBgActive: [0.85, 0.85, 0.84, 1.0]
+    TitleBg: [0.96, 0.96, 0.95, 1.0]
+    TitleBgActive: [0.92, 0.92, 0.91, 1.0]
+    TitleBgCollapsed: [1.0, 1.0, 1.0, 1.0]
+    MenuBarBg: [0.96, 0.96, 0.95, 1.0]
+    ScrollbarBg: [0.92, 0.92, 0.91, 1.0]
+    ScrollbarGrab: [0.75, 0.75, 0.74, 1.0]
+    ScrollbarGrabHovered: [0.65, 0.65, 0.64, 1.0]
+    ScrollbarGrabActive: [0.55, 0.55, 0.54, 1.0]
+    CheckMark: [0.4, 0.6, 0.45, 1.0]
+    SliderGrab: [0.6, 0.6, 0.6, 1.0]
+    SliderGrabActive: [0.4, 0.6, 0.45, 1.0]
+    Button: [0.88, 0.88, 0.87, 1.0]
+    ButtonHovered: [0.82, 0.82, 0.81, 1.0]
+    ButtonActive: [0.4, 0.6, 0.45, 1.0]
+    Header: [0.92, 0.92, 0.91, 1.0]
+    HeaderHovered: [0.88, 0.88, 0.87, 1.0]
+    HeaderActive: [0.85, 0.85, 0.84, 1.0]
+    Separator: [0.85, 0.85, 0.84, 1.0]
+    SeparatorHovered: [0.4, 0.6, 0.45, 1.0]
+    SeparatorActive: [0.4, 0.6, 0.45, 1.0]
+    ResizeGrip: [0.85, 0.85, 0.84, 0.5]
+    ResizeGripHovered: [0.4, 0.6, 0.45, 0.7]
+    ResizeGripActive: [0.4, 0.6, 0.45, 1.0]
+    Tab: [0.92, 0.92, 0.91, 1.0]
+    TabHovered: [0.98, 0.98, 0.97, 1.0]
+    TabActive: [1.0, 1.0, 1.0, 1.0]
+    TabUnfocused: [0.92, 0.92, 0.91, 1.0]
+    TabUnfocusedActive: [0.96, 0.96, 0.95, 1.0]
+    NavHighlight: [0.4, 0.6, 0.45, 0.8]
+    TextSelectedBg: [0.4, 0.6, 0.45, 0.35]

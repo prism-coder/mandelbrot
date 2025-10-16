@@ -1,0 +1,32 @@
+Mandelbrot:
+  FractalParameters:
+    Algorithm: Burning Ship
+    Power: 2.0
+    Bailout: 64.0
+    MaxIterations: 300
+  ViewParameters:
+    Zoom: 2.0
+    Position: [-1.76, -0.04]
+    Rotation: 90.0
+  JuliaParameters:
+    JuliaMode: false
+    JuliaC: [0, 0]
+  ColoringParameters:
+    ExteriorColoring: Smooth
+    InteriorColoring: Black
+    InteriorColor: [0, 0, 0]
+    ColorFrequency: 1.0
+    ColorOffset: 0.0
+    OrbitColoring: true
+    DistanceScale: 50.0
+    ColorPalette:
+      Colors:
+        - [0.8, 0.2, 0.8]
+        - [0.2, 0.8, 0.8]
+        - [0.8, 0.8, 0.2]
+  OrbitTrap:
+    Type: None
+    P1: [0, 0]
+    P2: [0, 0]
+    Color: [0, 0, 0]
+    Blend: 0.0

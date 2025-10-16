@@ -1,0 +1,86 @@
+Theme:
+  Style:
+    Alpha: 1.0
+    DisabledAlpha: 0.6
+    WindowPadding: [8.0, 8.0]
+    WindowRounding: 0.0
+    WindowBorderSize: 0.0
+    WindowMinSize: [32.0, 32.0]
+    WindowTitleAlign: [0.0, 0.5]
+    WindowMenuButtonPosition: None
+    ChildRounding: 4.2
+    ChildBorderSize: 1.0
+    PopupRounding: 7.3
+    PopupBorderSize: 1.0
+    FramePadding: [4.0, 3.0]
+    FrameRounding: 0.0
+    FrameBorderSize: 0.0
+    ItemSpacing: [8.0, 4.0]
+    ItemInnerSpacing: [4.0, 4.0]
+    CellPadding: [4.0, 2.0]
+    IndentSpacing: 21.0
+    ColumnsMinSpacing: 6.0
+    ScrollbarSize: 10.2
+    ScrollbarRounding: 9.0
+    GrabMinSize: 10.0
+    GrabRounding: 0.0
+    TabRounding: 4.0
+    TabBorderSize: 0.0
+    TabMinWidthForCloseButton: 0.0
+    ColorButtonPosition: Right
+    ButtonTextAlign: [0.5, 0.5]
+    SelectableTextAlign: [0.0, 0.0]
+  Colors:
+    Text: [1.000, 1.000, 1.000, 1.0]
+    TextDisabled: [0.443, 0.443, 0.443, 1.0]
+    WindowBg: [0.196, 0.227, 0.141, 0.85]
+    ChildBg: [0.0, 0.0, 0.0, 0.0]
+    PopupBg: [0.110, 0.110, 0.137, 0.92]
+    Border: [0.498, 0.498, 0.498, 0.5]
+    BorderShadow: [0.0, 0.0, 0.0, 0.0]
+    FrameBg: [0.427, 0.427, 0.427, 0.39]
+    FrameBgHovered: [0.075, 0.757, 0.573, 0.40]
+    FrameBgActive: [0.278, 1.000, 0.749, 0.69]
+    TitleBg: [0.388, 0.533, 0.341, 0.83]
+    TitleBgActive: [0.302, 0.573, 0.298, 0.87]
+    TitleBgCollapsed: [0.439, 0.800, 0.400, 0.20]
+    MenuBarBg: [0.290, 0.380, 0.275, 0.80]
+    ScrollbarBg: [0.200, 0.247, 0.298, 0.60]
+    ScrollbarGrab: [0.392, 0.914, 0.584, 0.30]
+    ScrollbarGrabHovered: [0.400, 0.800, 0.580, 0.40]
+    ScrollbarGrabActive: [0.388, 0.800, 0.412, 0.60]
+    CheckMark: [0.514, 0.588, 0.337, 1.0]
+    SliderGrab: [0.239, 0.878, 0.494, 1.0]
+    SliderGrabActive: [0.196, 0.490, 0.259, 1.0]
+    Button: [0.525, 0.804, 0.647, 0.62]
+    ButtonHovered: [0.396, 0.635, 0.478, 0.79]
+    ButtonActive: [0.176, 0.286, 0.169, 1.0]
+    Header: [0.388, 0.502, 0.310, 0.45]
+    HeaderHovered: [0.471, 0.639, 0.533, 0.80]
+    HeaderActive: [0.569, 0.784, 0.561, 0.80]
+    Separator: [0.498, 0.498, 0.498, 0.60]
+    SeparatorHovered: [0.208, 0.329, 0.271, 1.0]
+    SeparatorActive: [0.294, 0.451, 0.376, 1.0]
+    ResizeGrip: [1.000, 1.000, 1.000, 0.10]
+    ResizeGripHovered: [0.416, 0.992, 0.584, 0.60]
+    ResizeGripActive: [0.357, 0.537, 0.435, 0.90]
+    Tab: [0.235, 0.345, 0.267, 0.786]
+    TabHovered: [0.110, 0.231, 0.129, 0.80]
+    TabActive: [0.576, 1.000, 0.580, 0.382]
+    TabUnfocused: [0.227, 0.404, 0.224, 0.821]
+    TabUnfocusedActive: [0.396, 0.773, 0.592, 0.837]
+    PlotLines: [1.000, 1.000, 1.000, 1.0]
+    PlotLinesHovered: [0.898, 0.698, 0.0, 1.0]
+    PlotHistogram: [0.898, 0.698, 0.0, 1.0]
+    PlotHistogramHovered: [1.0, 0.600, 0.0, 1.0]
+    TableHeaderBg: [0.282, 0.376, 0.267, 1.0]
+    TableBorderStrong: [0.310, 0.447, 0.325, 1.0]
+    TableBorderLight: [0.259, 0.259, 0.278, 1.0]
+    TableRowBg: [0.0, 0.0, 0.0, 0.0]
+    TableRowBgAlt: [1.0, 1.0, 1.0, 0.07]
+    TextSelectedBg: [0.263, 0.635, 0.365, 0.35]
+    DragDropTarget: [1.0, 1.0, 0.0, 0.90]
+    NavHighlight: [0.369, 0.502, 0.243, 0.80]
+    NavWindowingHighlight: [1.0, 1.0, 1.0, 0.70]
+    NavWindowingDimBg: [0.800, 0.800, 0.800, 0.20]
+    ModalWindowDimBg: [0.200, 0.200, 0.200, 0.35]

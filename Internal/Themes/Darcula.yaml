@@ -1,0 +1,86 @@
+Theme:
+  Style:
+    Alpha: 1
+    DisabledAlpha: 0.600000024
+    WindowPadding: [8, 8]
+    WindowRounding: 5.30000019
+    WindowBorderSize: 1
+    WindowMinSize: [32, 32]
+    WindowTitleAlign: [0, 0.5]
+    WindowMenuButtonPosition: Left
+    ChildRounding: 0
+    ChildBorderSize: 1
+    PopupRounding: 0
+    PopupBorderSize: 1
+    FramePadding: [4, 3]
+    FrameRounding: 2.29999995
+    FrameBorderSize: 1
+    ItemSpacing: [8, 6.5]
+    ItemInnerSpacing: [4, 4]
+    CellPadding: [4, 2]
+    IndentSpacing: 21
+    ColumnsMinSpacing: 6
+    ScrollbarSize: 14
+    ScrollbarRounding: 5
+    GrabMinSize: 10
+    GrabRounding: 2.29999995
+    TabRounding: 4
+    TabBorderSize: 0
+    TabMinWidthForCloseButton: 0
+    ColorButtonPosition: Right
+    ButtonTextAlign: [0.5, 0.5]
+    SelectableTextAlign: [0, 0]
+  Colors:
+    Text: [0.733333349, 0.733333349, 0.733333349, 1]
+    TextDisabled: [0.345098048, 0.345098048, 0.345098048, 1]
+    WindowBg: [0.235294119, 0.247058824, 0.254901975, 0.939999998]
+    ChildBg: [0.235294119, 0.247058824, 0.254901975, 0]
+    PopupBg: [0.235294119, 0.247058824, 0.254901975, 0.939999998]
+    Border: [0.333333343, 0.333333343, 0.333333343, 0.5]
+    BorderShadow: [0.156862751, 0.156862751, 0.156862751, 0]
+    FrameBg: [0.168627456, 0.168627456, 0.168627456, 0.540000021]
+    FrameBgHovered: [0.450980395, 0.674509823, 0.996078432, 0.670000017]
+    FrameBgActive: [0.470588237, 0.470588237, 0.470588237, 0.670000017]
+    TitleBg: [0.0392156877, 0.0392156877, 0.0392156877, 1]
+    TitleBgActive: [0, 0, 0, 0.50999999]
+    TitleBgCollapsed: [0.156862751, 0.286274523, 0.478431374, 1]
+    MenuBarBg: [0.270588249, 0.286274523, 0.290196091, 0.800000012]
+    ScrollbarBg: [0.270588249, 0.286274523, 0.290196091, 0.600000024]
+    ScrollbarGrab: [0.219607845, 0.309803933, 0.419607848, 0.50999999]
+    ScrollbarGrabHovered: [0.219607845, 0.309803933, 0.419607848, 1]
+    ScrollbarGrabActive: [0.137254909, 0.192156866, 0.262745112, 0.910000026]
+    CheckMark: [0.898039222, 0.898039222, 0.898039222, 0.829999983]
+    SliderGrab: [0.698039234, 0.698039234, 0.698039234, 0.620000005]
+    SliderGrabActive: [0.298039228, 0.298039228, 0.298039228, 0.839999974]
+    Button: [0.333333343, 0.352941185, 0.360784322, 0.49000001]
+    ButtonHovered: [0.219607845, 0.309803933, 0.419607848, 1]
+    ButtonActive: [0.137254909, 0.192156866, 0.262745112, 1]
+    Header: [0.333333343, 0.352941185, 0.360784322, 0.529999971]
+    HeaderHovered: [0.450980395, 0.674509823, 0.996078432, 0.670000017]
+    HeaderActive: [0.470588237, 0.470588237, 0.470588237, 0.670000017]
+    Separator: [0.313725501, 0.313725501, 0.313725501, 1]
+    SeparatorHovered: [0.313725501, 0.313725501, 0.313725501, 1]
+    SeparatorActive: [0.313725501, 0.313725501, 0.313725501, 1]
+    ResizeGrip: [1, 1, 1, 0.850000024]
+    ResizeGripHovered: [1, 1, 1, 0.600000024]
+    ResizeGripActive: [1, 1, 1, 0.899999976]
+    Tab: [0.176470593, 0.349019617, 0.576470613, 0.861999989]
+    TabHovered: [0.258823544, 0.588235319, 0.97647059, 0.800000012]
+    TabActive: [0.196078435, 0.407843143, 0.678431392, 1]
+    TabUnfocused: [0.0666666701, 0.101960786, 0.145098045, 0.97240001]
+    TabUnfocusedActive: [0.13333334, 0.258823544, 0.423529416, 1]
+    PlotLines: [0.607843161, 0.607843161, 0.607843161, 1]
+    PlotLinesHovered: [1, 0.427450985, 0.349019617, 1]
+    PlotHistogram: [0.898039222, 0.698039234, 0, 1]
+    PlotHistogramHovered: [1, 0.600000024, 0, 1]
+    TableHeaderBg: [0.188235298, 0.188235298, 0.200000003, 1]
+    TableBorderStrong: [0.309803933, 0.309803933, 0.349019617, 1]
+    TableBorderLight: [0.227450982, 0.227450982, 0.247058824, 1]
+    TableRowBg: [0, 0, 0, 0]
+    TableRowBgAlt: [1, 1, 1, 0.0599999987]
+    TextSelectedBg: [0.184313729, 0.396078438, 0.792156875, 0.899999976]
+    DragDropTarget: [1, 1, 0, 0.899999976]
+    NavHighlight: [0.258823544, 0.588235319, 0.97647059, 1]
+    NavWindowingHighlight: [1, 1, 1, 0.699999988]
+    NavWindowingDimBg: [0.800000012, 0.800000012, 0.800000012, 0.200000003]
+    ModalWindowDimBg: [0.800000012, 0.800000012, 0.800000012, 0.349999994]

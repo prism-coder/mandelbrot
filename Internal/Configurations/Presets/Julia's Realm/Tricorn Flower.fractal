@@ -1,0 +1,32 @@
+Mandelbrot:
+  FractalParameters:
+    Algorithm: Tricorn
+    Power: 2
+    Bailout: 16
+    MaxIterations: 256
+  ViewParameters:
+    Zoom: 1
+    Position: [0, 0]
+    Rotation: 120
+  JuliaParameters:
+    JuliaMode: true
+    JuliaC: [0.2, 0.5]
+  ColoringParameters:
+    ExteriorColoring: Smooth
+    InteriorColoring: Black
+    InteriorColor: [0, 0, 0]
+    ColorFrequency: 1
+    ColorOffset: 0
+    OrbitColoring: false
+    DistanceScale: 50
+    ColorPalette:
+      Colors:
+        - [0, 0.2, 0.1]
+        - [1, 0.8, 0.9]
+        - [0.8, 0.2, 0.5]
+  OrbitTrap:
+    Type: None
+    P1: [0, 0]
+    P2: [0, 0]
+    Color: [0, 0, 0]
+    Blend: 0

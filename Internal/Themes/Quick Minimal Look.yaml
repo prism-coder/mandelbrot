@@ -1,0 +1,86 @@
+Theme:
+  Style:
+    Alpha: 1
+    DisabledAlpha: 0.3
+    WindowPadding: [6.5, 2.7]
+    WindowRounding: 0
+    WindowBorderSize: 1
+    WindowMinSize: [20, 32]
+    WindowTitleAlign: [0, 0.6]
+    WindowMenuButtonPosition: None
+    ChildRounding: 0
+    ChildBorderSize: 1
+    PopupRounding: 10.1
+    PopupBorderSize: 1
+    FramePadding: [20, 3.5]
+    FrameRounding: 0
+    FrameBorderSize: 0
+    ItemSpacing: [4.4000001, 4]
+    ItemInnerSpacing: [4.6, 3.6]
+    CellPadding: [3.1, 6.3]
+    IndentSpacing: 4.4
+    ColumnsMinSpacing: 5.4
+    ScrollbarSize: 8.8
+    ScrollbarRounding: 9
+    GrabMinSize: 9.4
+    GrabRounding: 0
+    TabRounding: 0
+    TabBorderSize: 0
+    TabMinWidthForCloseButton: 0
+    ColorButtonPosition: Right
+    ButtonTextAlign: [0.5, 0.5]
+    SelectableTextAlign: [0, 0]
+  Colors:
+    Text: [1, 1, 1, 1]
+    TextDisabled: [0.498039216, 0.498039216, 0.498039216, 1]
+    WindowBg: [0.0509803928, 0.0352941193, 0.0392156877, 1]
+    ChildBg: [0, 0, 0, 0]
+    PopupBg: [0.0784313753, 0.0784313753, 0.0784313753, 0.939999998]
+    Border: [0.101960786, 0.101960786, 0.101960786, 0.5]
+    BorderShadow: [0, 0, 0, 0]
+    FrameBg: [0.160784319, 0.149019614, 0.192156866, 1]
+    FrameBgHovered: [0.278431386, 0.250980407, 0.337254912, 1]
+    FrameBgActive: [0.278431386, 0.250980407, 0.337254912, 1]
+    TitleBg: [0.278431386, 0.250980407, 0.337254912, 1]
+    TitleBgActive: [0.278431386, 0.250980407, 0.337254912, 1]
+    TitleBgCollapsed: [0, 0, 0, 0.50999999]
+    MenuBarBg: [0.137254909, 0.137254909, 0.137254909, 1]
+    ScrollbarBg: [0.0196078438, 0.0196078438, 0.0196078438, 0.529999971]
+    ScrollbarGrab: [0.309803933, 0.309803933, 0.309803933, 1]
+    ScrollbarGrabHovered: [0.407843143, 0.407843143, 0.407843143, 1]
+    ScrollbarGrabActive: [0.509803951, 0.509803951, 0.509803951, 1]
+    CheckMark: [0.545098066, 0.466666669, 0.717647076, 1]
+    SliderGrab: [0.278431386, 0.250980407, 0.337254912, 1]
+    SliderGrabActive: [0.278431386, 0.250980407, 0.337254912, 1]
+    Button: [0.278431386, 0.250980407, 0.337254912, 1]
+    ButtonHovered: [0.345098048, 0.294117659, 0.458823532, 1]
+    ButtonActive: [0.313725501, 0.258823544, 0.427450985, 1]
+    Header: [0.31764707, 0.278431386, 0.407843143, 1]
+    HeaderHovered: [0.41568628, 0.36470589, 0.529411793, 1]
+    HeaderActive: [0.403921574, 0.352941185, 0.509803951, 1]
+    Separator: [0.427450985, 0.427450985, 0.498039216, 0.5]
+    SeparatorHovered: [0.278431386, 0.250980407, 0.337254912, 1]
+    SeparatorActive: [0.278431386, 0.250980407, 0.337254912, 1]
+    ResizeGrip: [0.278431386, 0.250980407, 0.337254912, 1]
+    ResizeGripHovered: [0.278431386, 0.250980407, 0.337254912, 1]
+    ResizeGripActive: [0.278431386, 0.250980407, 0.337254912, 1]
+    Tab: [0.278431386, 0.250980407, 0.337254912, 1]
+    TabHovered: [0.325490206, 0.286274523, 0.41568628, 1]
+    TabActive: [0.400000006, 0.349019617, 0.505882382, 1]
+    TabUnfocused: [0.278431386, 0.250980407, 0.337254912, 1]
+    TabUnfocusedActive: [0.278431386, 0.250980407, 0.337254912, 1]
+    PlotLines: [0.607843161, 0.607843161, 0.607843161, 1]
+    PlotLinesHovered: [1, 0.427450985, 0.349019617, 1]
+    PlotHistogram: [0.898039222, 0.698039234, 0, 1]
+    PlotHistogramHovered: [1, 0.600000024, 0, 1]
+    TableHeaderBg: [0.188235298, 0.188235298, 0.200000003, 1]
+    TableBorderStrong: [0.309803933, 0.309803933, 0.349019617, 1]
+    TableBorderLight: [0.227450982, 0.227450982, 0.247058824, 1]
+    TableRowBg: [0, 0, 0, 0]
+    TableRowBgAlt: [1, 1, 1, 0.0599999987]
+    TextSelectedBg: [0.258823544, 0.588235319, 0.97647059, 0.349999994]
+    DragDropTarget: [1, 1, 0, 0.899999976]
+    NavHighlight: [0.278431386, 0.250980407, 0.337254912, 1]
+    NavWindowingHighlight: [1, 1, 1, 0.699999988]
+    NavWindowingDimBg: [0.800000012, 0.800000012, 0.800000012, 0.200000003]
+    ModalWindowDimBg: [0.800000012, 0.800000012, 0.800000012, 0.349999994]
