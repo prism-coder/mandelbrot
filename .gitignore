@@ -1047,6 +1047,7 @@ dkms.conf
 
 # Visual Studio files
 *.sln
+*.slnx
 *.vcxproj
 *.vcxproj.filters
 Export

@@ -2,9 +2,6 @@
 
 #include "Core/Log.h"
 
-GLFWwindow* Cursor::s_WindowHandle = nullptr;
-bool Cursor::s_IsLocked = false;
-
 void Cursor::Init(GLFWwindow* window) {
 	Log::Trace("Cursor::Init - Initializing the Cursor");
 	s_WindowHandle = window;
@@ -17,6 +14,7 @@ void Cursor::Shutdown() {
 
 void Cursor::Lock() {
 	if (s_IsLocked) {
+		// If the cursor is already locked, we can simply return early to avoid redundant state changes and unnecessary calls to GLFW functions.
 		return;
 	}
 
@@ -28,6 +26,7 @@ void Cursor::Lock() {
 
 void Cursor::Unlock() {
 	if (!s_IsLocked) {
+		// If the cursor is already unlocked, we can simply return early to avoid redundant state changes and unnecessary calls to GLFW functions.
 		return;
 	}
 

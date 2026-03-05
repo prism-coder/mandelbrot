@@ -69,13 +69,17 @@ SettingsSerializer::SettingsSerializer(Settings& settings)
 bool SettingsSerializer::Serialize(const std::filesystem::path& filepath) {
 	Log::Trace("SettingsSerializer::Serialize - Saving Settings");
 
+	// Check if the provided file path is empty, which would indicate an invalid path for saving settings.
 	if (filepath.empty()) {
 		Log::Error("SettingsSerializer::Serialize - Filepath is empty");
+
+		// Return false to indicate failure due to an invalid file path.
 		return false;
 	}
 
 	Log::Trace("SettingsSerializer::Serialize - Serializing Settings into file: " + filepath.string());
 
+	// Create a YAML emitter to construct the YAML representation of the settings.
 	YAML::Emitter out;
 	{
 		out << YAML::BeginMap; // Root
@@ -92,52 +96,71 @@ bool SettingsSerializer::Serialize(const std::filesystem::path& filepath) {
 		out << YAML::EndMap; // Root
 	}
 
+	// Open a file stream to write the serialized settings to the specified file path.
 	std::ofstream fout(filepath);
 
+	// Check if the file stream is in a bad state, which would indicate an issue with opening or writing to the file.
 	if (fout.bad()) {
 		Log::Error("SettingsSerializer::Serialize - Error during Settings Serialization: Bad file");
+
+		// Return false to indicate failure due to an issue with the file stream.
 		return false;
 	}
 
+	// Check if the YAML emitter is not in a good state, which would indicate that the serialization process encountered an error.
 	if (!out.good()) {
 		Log::Error("SettingsSerializer::Serialize - Error during Settings Serialization: Bad format");
+
+		// Return false to indicate failure due to an issue with the YAML emitter.
 		return false;
 	}
 
+	// Write the serialized YAML string to the file.
 	fout << out.c_str();
 
 	Log::Trace("SettingsSerializer::Serialize - Settings Serialization complete");
 
+	// Return true to indicate that the settings were successfully serialized and saved to the file.
 	return true;
 }
 
 bool SettingsSerializer::Deserialize(const std::filesystem::path& filepath) {
+	// Data structure to hold the loaded YAML data from the file.
 	YAML::Node data;
 
 	try {
 		Log::Trace("SettingsSerializer::Deserialize - Attempting to read Settings file: " + filepath.string());
+
+		// Load the YAML data from the specified file path. If the file cannot be read or parsed, an exception will be thrown.
 		data = YAML::LoadFile(filepath.string());
 	} catch (YAML::Exception e) {
 		Log::Error("SettingsSerializer::Deserialize - Error reading Settings file: " + e.msg);
+
+		// Return false to indicate failure due to an error while reading the file.
 		return false;
 	}
 
+	// Retrieve the "Settings" node from the loaded YAML data.
 	const auto& settingsNode = data["Settings"];
 
+	// Check if the "Settings" node is not present in the YAML data, which would indicate an issue with the file format or content.
 	if (!settingsNode) {
 		Log::Error("SettingsSerializer::Deserialize - Error loading Settings file: " + filepath.string());
 
+		// Return false to indicate failure due to missing "Settings" node in the YAML data.
 		return false;
 	}
 
 	Log::Trace("SettingsSerializer::Deserialize - Loading Settings from file: " + filepath.string());
 
+	// Deserialize the settings from the corresponding nodes in the YAML data and update the current settings accordingly.
 	DeserializeApplicationSettings(settingsNode);
 	DeserializeEditorSettings(settingsNode);
 	DeserializeRenderingSettings(settingsNode);
 
 	Log::Trace("SettingsSerializer::Deserialize - Loading complete");
 
+	// Return true to indicate that the settings were successfully deserialized and loaded from the file.
 	return true;
 }
 

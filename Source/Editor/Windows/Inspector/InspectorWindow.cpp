@@ -68,6 +68,9 @@ void InspectorWindow::OnUIRender() {
 			UI::SliderFloat("Zoom Speed", m_FractalState.ZoomSpeed, 0.01f, 10.0f);
 			UI::Tooltip("Controls the speed of the zoom.\nHigher is faster.");
 
+			UI::SliderFloat("Power Speed", m_FractalState.PowerSpeed, 0.01f, 10.0f);
+			UI::Tooltip("Controls the speed of the power change.\nHigher is faster.");
+
 			UI::Separator();
 		}
 
@@ -76,7 +79,7 @@ void InspectorWindow::OnUIRender() {
 			UI::Tooltip("Changes the core mathematical formula used to generate the fractal.");
 
 			UI::DragFloat("Power", mandelbrot.Power, 0.01f, 10.0f, 0.01f);
-			UI::Tooltip("The exponent 'n' in the formula z = z^n + c.\nCreates different fractal shapes (Multibrot sets).");
+			UI::Tooltip("The exponent 'n' in the formula z = z^n + c.\nCreates different fractal shapes (Multibrot sets).\nCan be controlled using the 'Page Up' and 'Page Down' keys.");
 
 			UI::SliderInt("Max Iterations", mandelbrot.MaxIterations, 32, 8192);
 			UI::Tooltip("The maximum number of calculations per pixel.\nHigher values reveal more detail but are slower.");
@@ -102,25 +105,27 @@ void InspectorWindow::OnUIRender() {
 			UI::Tooltip("Magnification level of the fractal.");
 
 			{
-				glm::vec2 positionBeforeDrag = mandelbrot.Position;
-				glm::vec2 positionAfterDrag = positionBeforeDrag;
+				// Convert world position to screen space for display.
+				float rotation = glm::radians(mandelbrot.Rotation);
 
-				UI::Vec2("Position", positionAfterDrag);
+				glm::mat2 worldToScreen = {
+					{ cos(rotation), -sin(rotation) },
+					{ sin(rotation),  cos(rotation) }
+				};
+
+				glm::vec2 screenPosition = worldToScreen * mandelbrot.Position;
+				glm::vec2 originalScreenPosition = screenPosition;
+
+				UI::Vec2("Position", screenPosition);
 				UI::Tooltip("Pans the view across the complex plane.");
 
-				if (positionAfterDrag != positionBeforeDrag) {
-					glm::vec2 delta = positionAfterDrag - positionBeforeDrag;
-
-					float inverseRotation = glm::radians(-mandelbrot.Rotation);
-
-					glm::mat2 rotMat = {
-						{ cos(inverseRotation), -sin(inverseRotation) },
-						{ sin(inverseRotation),  cos(inverseRotation) }
+				if (screenPosition != originalScreenPosition) {
+					glm::mat2 screenToWorld = {
+						{  cos(rotation), sin(rotation) },
+						{ -sin(rotation), cos(rotation) }
 					};
 
-					glm::vec2 screenSpaceDelta = rotMat * delta;
-
-					mandelbrot.Position = positionBeforeDrag + screenSpaceDelta;
+					mandelbrot.Position = screenToWorld * screenPosition;
 				}
 			}
 

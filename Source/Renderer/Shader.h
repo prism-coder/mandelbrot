@@ -16,7 +16,7 @@ public:
 	virtual const std::filesystem::path& GetFilepath() const = 0;
 
 	template<typename T>
-	void SetUniform(const std::string& name, const T& value) {
+	void SetUniform(const std::string& name, const T& value, const size_t& size = 1) {
 		if constexpr (std::is_same_v<T, int>) {
 			UploadUniformInt(name, value);
 		} else if constexpr (std::is_same_v<T, float>) {
@@ -33,6 +33,9 @@ public:
 			UploadUniformMat4(name, value);
 		}
 	}
+
+	virtual void UploadUniformFloatArray(const std::string& name, const float* values, uint32_t count) = 0;
+	virtual void UploadUniformVec3Array(const std::string& name, const glm::vec3* values, uint32_t count) = 0;
 
 	static Ref<Shader> Create(const std::filesystem::path& shaderAssetPath);
 

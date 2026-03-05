@@ -1,18 +1,27 @@
 #pragma once
 
-// Key codes based on the GLFW library
+/**
+ * Enumeration of key codes representing various keys on the keyboard, including alphanumeric characters, function keys, special keys, and arrow keys.
+ * The key codes are based on the GLFW library, which provides a standardized set of key codes.
+ * 
+ * The key codes can be used to query the state of keys in the `Input` class, allowing for input handling in applications such as games or interactive software.
+ */
 enum class KeyCode {
 	// Alphanumeric Characters
+
 	A = 65, B, C, D, E, F, G, H, I, J, K, L, M,
 	N, O, P, Q, R, S, T, U, V, W, X, Y, Z,
 
 	// Numeric Characters
+
 	D0 = 48, D1, D2, D3, D4, D5, D6, D7, D8, D9,
 
 	// Function Keys
+
 	F1 = 290, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11, F12,
 
 	// Special Keys
+
 	Space = 32,
 	Escape = 256,
 	Enter = 257,
@@ -32,16 +41,9 @@ enum class KeyCode {
 	PageDown = 267,
 
 	// Arrow Keys
+
 	Right = 262,
 	Left = 263,
 	Down = 264,
 	Up = 265
-};
-
-// Input actions
-enum class InputAction {
-	Unknown = -1,
-	Release = 0,
-	Press = 1,
-	Repeat = 2
 };

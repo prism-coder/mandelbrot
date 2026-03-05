@@ -117,6 +117,7 @@ void Application::Init() {
 	Log::Trace("Application::Init - Setting up Window callbacks");
 	glfwSetKeyCallback(m_WindowHandle, KeyCallback);
 	glfwSetMouseButtonCallback(m_WindowHandle, MouseButtonCallback);
+	glfwSetScrollCallback(m_WindowHandle, MouseScrollCallback);
 	glfwSetCursorPosCallback(m_WindowHandle, CursorPosCallback);
 
 	Log::Trace("Application::Init - Showing the Window");
@@ -179,8 +180,6 @@ void Application::LoadAppIcon() {
 
 void Application::Run() {
 	while (!glfwWindowShouldClose(m_WindowHandle) && m_Running) {
-		Input::OnUpdate();
-
 		float time = (float)glfwGetTime();
 		Timestep timestep = time - m_LastFrameTime;
 		m_LastFrameTime = time;
@@ -193,6 +192,8 @@ void Application::Run() {
 		}
 
 		UI::End();
+
+		Input::OnUpdate();
 
 		glfwSwapBuffers(m_WindowHandle);
 		glfwPollEvents();
@@ -242,6 +243,10 @@ void Application::MouseButtonCallback(GLFWwindow* window, int button, int action
 	}
 
 	Input::SetMouseButtonState(engineButton, engineAction);
+}
+
+void Application::MouseScrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
+	Input::SetScrollOffset(xoffset, yoffset);
 }
 
 void Application::CursorPosCallback(GLFWwindow* window, double xpos, double ypos) {

@@ -11,8 +11,8 @@ Settings:
   Editor:
     Appearance:
       Theme: Excellency
-      FontSize: 14
-      UIScale: 1.125
+      FontSize: 13
+      UIScale: 1
       ColumnWidth: 200
     AutoSaveInterval: 10
   Rendering:

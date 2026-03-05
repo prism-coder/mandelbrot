@@ -18,10 +18,11 @@ struct FractalState {
 	// Smoothing factor. A higher value = faster transition.
 	float Smoothing = 5.0f;
 
-	// Speed for movement and zoom. A higher value = faster movement.
+	// Speed for movement, rotation, zoom and power. A higher value = faster movement.
 	float MovementSpeed = 1.0f;
 	float RotationSpeed = 1.0f;
 	float ZoomSpeed = 1.0f;
+	float PowerSpeed = 1.0f;
 
 	void Update(Timestep ts) {
 		// This is the formula for exponential interpolation, which is independent of the framerate

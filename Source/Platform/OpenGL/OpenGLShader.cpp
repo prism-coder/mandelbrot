@@ -157,6 +157,16 @@ void OpenGLShader::UploadUniformMat4(const std::string& name, const glm::mat4& v
 	glProgramUniformMatrix4fv(m_Handle, location, 1, GL_FALSE, glm::value_ptr(value));
 }
 
+void OpenGLShader::UploadUniformFloatArray(const std::string& name, const float* values, uint32_t count) {
+	GLint location = glGetUniformLocation(m_Handle, name.c_str());
+	glProgramUniform1fv(m_Handle, location, count, values);
+}
+
+void OpenGLShader::UploadUniformVec3Array(const std::string& name, const glm::vec3* values, uint32_t count) {
+	GLint location = glGetUniformLocation(m_Handle, name.c_str());
+	glProgramUniform3fv(m_Handle, location, count, glm::value_ptr(values[0]));
+}
+
 GLuint OpenGLShader::CompileShader(GLenum type, const std::string& source) {
 	std::string typeStr = ShaderTypeToString(type);
 	Log::Trace("OpenGLShader::CompileShader - Compiling OpenGL " + typeStr + " Shader");

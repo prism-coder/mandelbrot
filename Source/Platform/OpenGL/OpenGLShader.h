@@ -23,6 +23,9 @@ private:
 	virtual void UploadUniformVec4(const std::string& name, const glm::vec4& value) override;
 	virtual void UploadUniformMat4(const std::string& name, const glm::mat4& value) override;
 
+	virtual void UploadUniformFloatArray(const std::string& name, const float* values, uint32_t count) override;
+	virtual void UploadUniformVec3Array(const std::string& name, const glm::vec3* values, uint32_t count) override;
+
 	GLuint CompileShader(GLenum type, const std::string& source);
 	std::string ReadTextFile(const std::filesystem::path& path);
 private:

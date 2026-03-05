@@ -3,6 +3,7 @@
 #include "Core/Application.h"
 #include "Core/Log.h"
 #include "Core/Settings/SettingsManager.h"
+#include <glm/gtc/type_ptr.hpp>
 
 #include "stb_image_write.h"
 
@@ -41,13 +42,13 @@ void Renderer::Submit(const Mandelbrot& mandelbrot) {
 		return;
 	}
 
-	const auto& width = s_Framebuffer->GetWidth();
-	const auto& height = s_Framebuffer->GetHeight();
+	const float& width = (float)s_Framebuffer->GetWidth();
+	const float& height = (float)s_Framebuffer->GetHeight();
 
 	m_Shader->Bind();
 
 	// View and Calculation
-	m_Shader->SetUniform("u_Resolution", glm::vec2((float)width, (float)height));
+	m_Shader->SetUniform("u_Resolution", glm::vec2(width, height));
 	m_Shader->SetUniform("u_Zoom", mandelbrot.Zoom);
 	m_Shader->SetUniform("u_Position", mandelbrot.Position);
 	m_Shader->SetUniform("u_Rotation", glm::radians(mandelbrot.Rotation));
@@ -71,12 +72,9 @@ void Renderer::Submit(const Mandelbrot& mandelbrot) {
 
 	// Pallette
 	m_Shader->SetUniform("u_ColorCount", mandelbrot.ColorPalette.ColorCount);
-	for (size_t i = 0; i < mandelbrot.ColorPalette.ColorCount; ++i) {
-		std::string colorsName = "u_Colors[" + std::to_string(i) + "]";
-		std::string positionsName = "u_ColorPositions[" + std::to_string(i) + "]";
-
-		m_Shader->SetUniform(colorsName, mandelbrot.ColorPalette.ColorData[i]);
-		m_Shader->SetUniform(positionsName, mandelbrot.ColorPalette.ColorPositions[i]);
+	if (mandelbrot.ColorPalette.ColorCount > 0) {
+		m_Shader->UploadUniformVec3Array("u_Colors", mandelbrot.ColorPalette.ColorData, mandelbrot.ColorPalette.ColorCount);
+		m_Shader->UploadUniformFloatArray("u_ColorPositions", mandelbrot.ColorPalette.ColorPositions, mandelbrot.ColorPalette.ColorCount);
 	}
 
 	// Orbit Trap
