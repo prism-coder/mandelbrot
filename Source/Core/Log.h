@@ -21,10 +21,8 @@
 
 /**
  * Represents the specification for the logging system.
+ * 
  * It includes the name of the application, the filepath for the log file, and whether to write logs to a file or not.
- * - `Name`: The name of the application, used in log messages and as the default log file name.
- * - `Filepath`: The path to the log file. By default, it is set to "Application.log".
- * - `WriteToFile`: A boolean flag indicating whether to write logs to a file. If set to true, logs will be written to the specified file; otherwise, they will only be output to the console.
  */
 struct LogSpecification {
 	/// @brief The name of the application, used in log messages and as the default log file name.
@@ -40,16 +38,9 @@ struct LogSpecification {
 /**
  * The log levels supported by the logging system, ordered from least severe to most severe.
  * 
- * Each level represents a different severity of log message:
- * - `Trace`: The most detailed level, used for fine-grained debugging information.
- * - `Debug`: Used for general debugging information that may be useful during development.
- * - `Info`: Used for informational messages that highlight the progress of the application.
- * - `Warning`: Used for potentially harmful situations that do not cause the application to stop but may indicate a problem.
- * - `Error`: Used for error events that might still allow the application to continue running, but indicate a significant problem.
- * - `Fatal`: The most severe level, used for critical errors that cause the application to terminate immediately.
+ * Each level represents a different severity of log message.
  * 
  * The logging system will only output messages that are at or above the currently set log level.
- * For example, if the log level is set to `Warning`, only `Warning`, `Error`, and `Fatal` messages will be logged, while `Trace`, `Debug`, and `Info` messages will be ignored.
  */
 enum class Level {
 	/// @brief The most detailed level, used for fine-grained debugging information.
