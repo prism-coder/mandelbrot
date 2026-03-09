@@ -2,6 +2,7 @@
 
 #include "Core/Input/KeyCodes.h"
 #include "Core/Input/MouseCodes.h"
+#include "Core/Input/GamepadCodes.h"
 #include "Core/Input/InputAction.h"
 
 #include <glm/glm.hpp>
@@ -68,6 +69,30 @@ public:
 	 * @return `true` if the mouse button was released in the current frame, `false` otherwise.
 	 */
 	static bool IsMouseButtonUp(MouseCode button);
+
+	/**
+	 * Checks if a gamepad button is currently pressed.
+	 * 
+	 * @param button The gamepad button to check. This should be a value from the `GamepadCode` enumeration.
+	 * @return `true` if the gamepad button is pressed, `false` otherwise.
+	 */
+	static bool IsGamepadButtonPressed(GamepadCode button);
+
+	/**
+	 * Checks if a gamepad button is currently held down.
+	 * 
+	 * @param button The gamepad button to check. This should be a value from the `GamepadCode` enumeration.
+	 * @return `true` if the gamepad button is held down, `false` otherwise.
+	 */
+	static bool IsGamepadButtonDown(GamepadCode button);
+
+	/**
+	 * Checks if a gamepad button was released in the current frame.
+	 * 
+	 * @param button The gamepad button to check. This should be a value from the `GamepadCode` enumeration.
+	 * @return `true` if the gamepad button was released in the current frame, `false` otherwise.
+	 */
+	static bool IsGamepadButtonUp(GamepadCode button);
 
 	/**
 	 * Gets the current mouse position in screen coordinates.
@@ -138,6 +163,27 @@ public:
 	 * @param y The y-coordinate of the scroll offset.
 	 */
 	static void SetScrollOffset(double x, double y);
+
+	/**
+	 * Sets the state of a gamepad button.
+	 *
+	 * This method is intended to be called by the platform-specific input handling code to update the state of gamepad buttons.
+	 *
+	 * @param button The gamepad button to update. This should be a value from the `GamepadCode` enumeration.
+	 * @param action The action representing the new state of the gamepad button.
+	 * This should be a value from the `InputAction` enumeration, indicating whether the button is pressed, released, or held down.
+	 */
+	static void SetGamepadButtonState(GamepadCode button, InputAction action);
+
+	/**
+	 * Sets the value of a gamepad axis.
+	 * 
+	 * This method is intended to be called by the platform-specific input handling code to update the value of gamepad axes.
+	 * 
+	 * @param axis The gamepad axis to update. This should be a value from the `GamepadAxis` enumeration.
+	 * @param value The new value of the gamepad axis, typically ranging from -1.0 to 1.0 for thumbsticks, and from -1.0 (released) to 1.0 (fully pressed) for triggers.
+	 */
+	static void SetGamepadAxisState(GamepadAxis axis, float value);
 private:
 	Input() = default;
 
@@ -161,13 +207,19 @@ private:
 	 * The maximum number of keys and mouse buttons that can be tracked by the input system.
 	 * These values are based on the GLFW library, which defines a maximum of 350 keys.
 	 */
-	inline static constexpr size_t KeyCount = 350;
+	inline static constexpr size_t KeyCount = static_cast<size_t>(KeyCode::Last) + 1;
 
 	/**
 	 * The maximum number of mouse buttons that can be tracked by the input system.
 	 * This value is based on the GLFW library, which defines a maximum of 8 mouse buttons.
 	 */
-	inline static constexpr size_t MouseButtonCount = 8;
+	inline static constexpr size_t MouseButtonCount = static_cast<size_t>(MouseCode::Last) + 1;
+
+	/**
+	 * The maximum number of gamepad buttons that can be tracked by the input system.
+	 * This value is based on the GLFW library, which defines a standardized set of gamepad button codes.
+	 */
+	inline static constexpr size_t GamepadButtonCount = static_cast<size_t>(GamepadCode::Last) + 1;
 
 	/// @brief Array to store the current state of key buttons.
 	inline static bool s_CurrentKeyState[KeyCount] = { false };
@@ -180,6 +232,12 @@ private:
 
 	/// @brief Array to store the previous state of mouse buttons.
 	inline static bool s_PreviousMouseButtonState[MouseButtonCount] = { false };
+
+	/// @brief Array to store the current state of gamepad buttons.
+	inline static bool s_CurrentGamepadButtonState[GamepadButtonCount] = { false };
+
+	/// @brief Array to store the previous state of gamepad buttons.
+	inline static bool s_PreviousGamepadButtonState[GamepadButtonCount] = { false };
 
 	/// @brief  Variable that stores the previous mouse position in screen coordinates.
 	inline static glm::vec2 s_PreviousMousePosition = { 0.0f, 0.0f };

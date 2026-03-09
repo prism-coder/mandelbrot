@@ -304,6 +304,25 @@ void Application::CursorPosCallback(GLFWwindow* window, double xpos, double ypos
 	Input::SetMousePosition(xpos, ypos);
 }
 
+void Application::GamepadButtonCallback(GLFWwindow* window, int button, int action, int mods) {
+	GamepadCode engineButton = static_cast<GamepadCode>(button);
+	InputAction engineAction = InputAction::Unknown;
+
+	if (action == GLFW_PRESS) {
+		engineAction = InputAction::Press;
+	} else if (action == GLFW_RELEASE) {
+		engineAction = InputAction::Release;
+	} else if (action == GLFW_REPEAT) {
+		engineAction = InputAction::Repeat;
+	}
+
+	Input::SetGamepadButtonState(engineButton, engineAction);
+}
+
+void Application::GamepadAxisCallback(GLFWwindow* window, int axis, float value) {
+
+}
+
 uint32_t Application::GetWidth() const {
 	int width, height;
 	glfwGetFramebufferSize(m_WindowHandle, &width, &height);

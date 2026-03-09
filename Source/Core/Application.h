@@ -224,6 +224,22 @@ private:
 	static void CursorPosCallback(GLFWwindow* window, double xpos, double ypos);
 
 	/**
+	 * GLFW callback function for handling gamepad button input events.
+	 * 
+	 * This function will be called by GLFW whenever a gamepad button event occurs, and it will translate the GLFW gamepad button codes and actions into the application's input system.
+	 * It will update the state of the gamepad buttons in the application's input system based on
+	 */
+	static void GamepadButtonCallback(GLFWwindow *window, int button, int action, int mods);
+
+	/**
+	 * GLFW callback function for handling gamepad axis input events.
+	 * 
+	 * This function will be called by GLFW whenever a gamepad axis event occurs, and it will translate the GLFW gamepad axis codes and values into the application's input system.
+	 * It will update the state of the gamepad axes in the application's input system based on
+	 */
+	static void GamepadAxisCallback(GLFWwindow *window, int axis, float value);
+
+	/**
 	 * GLFW callback function for handling error events.
 	 * 
 	 * This function will be called by GLFW whenever an error occurs, and it will log the error message using the application's logging system.

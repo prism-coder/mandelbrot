@@ -38,6 +38,18 @@ bool Input::IsMouseButtonUp(MouseCode button) {
 	return !IsMouseButtonPressed(button) && s_PreviousMouseButtonState[static_cast<int32_t>(button)];
 }
 
+bool Input::IsGamepadButtonPressed(GamepadCode button) {
+	return s_CurrentGamepadButtonState[static_cast<int32_t>(button)];
+}
+
+bool Input::IsGamepadButtonDown(GamepadCode button) {
+	return IsGamepadButtonPressed(button) && !s_PreviousGamepadButtonState[static_cast<int32_t>(button)];
+}
+
+bool Input::IsGamepadButtonUp(GamepadCode button) {
+	return !IsGamepadButtonPressed(button) && s_PreviousGamepadButtonState[static_cast<int32_t>(button)];
+}
+
 void Input::SetKeyState(KeyCode key, InputAction action) {
 	// Validate the key code before updating the state to prevent out-of-bounds access on the state arrays.
 	if (static_cast<int32_t>(key) < 0 || static_cast<int32_t>(key) >= KeyCount) {
@@ -78,6 +90,26 @@ void Input::SetMousePosition(double x, double y) {
 void Input::SetScrollOffset(double x, double y) {
 	// Update the current scroll offset with the provided x and y coordinates, converting them to float for storage in the `glm::vec2` variable.
 	s_ScrollOffset = { (float)x, (float)y };
+}
+
+void Input::SetGamepadButtonState(GamepadCode button, InputAction action) {
+	// Validate the gamepad button code before updating the state to prevent out-of-bounds access on the state arrays.
+	if (static_cast<int32_t>(button) < 0 || static_cast<int32_t>(button) >= GamepadButtonCount) {
+		Log::Warning("Input::SetGamepadButtonState - Invalid gamepad button code: " + std::to_string(static_cast<int32_t>(button)));
+		return;
+	}
+
+	if (action == InputAction::Press || action == InputAction::Repeat) {
+		// Set the current gamepad button state to true if the action is Press or Repeat, indicating that the gamepad button is currently pressed.
+		s_CurrentGamepadButtonState[static_cast<int32_t>(button)] = true;
+	} else {
+		// Set the current gamepad button state to false if the action is Release, indicating that the gamepad button is currently released.
+		s_CurrentGamepadButtonState[static_cast<int32_t>(button)] = false;
+	}
+}
+
+void Input::SetGamepadAxisState(GamepadAxis axis, float value) {
+	
 }
 
 void Input::CalculateMouseDelta() {
