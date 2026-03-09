@@ -29,6 +29,13 @@ private:
 
 	void ExportFrameAsImage();
 	void ExportConfiguration();
+
+	std::filesystem::path BuildExportPath(const std::filesystem::path& folder, const std::string& extension);
+	void CheckOrCreateFolder(const std::filesystem::path& filepath);
+
+	void HandleKeyboardShortcuts();
+	void UpdateWindowTitle(const std::filesystem::path& filepath);
+	void AddToRecentConfigurations(const std::filesystem::path& filepath);
 private:
 	bool m_AboutWindowOpen = false;
 	bool m_InspectorWindowOpen = true;
@@ -46,6 +53,11 @@ private:
 	// Configuration Loading Data
 	const std::filesystem::path m_DefaultConfigurationFilepath = "Internal/Configurations/Default.fractal";
 	const std::filesystem::path m_PresetsFilepath = "Internal/Configurations/Presets/";
+
+	// Export Filepaths
+	const std::filesystem::path m_ExportFilepath = "Export";
+	const std::filesystem::path m_ExportImageFilepath = m_ExportFilepath / "Image";
+	const std::filesystem::path m_ExportConfigurationFilepath = m_ExportFilepath / "Configuration";
 
 	std::filesystem::path m_CurrentConfigurationFilepath;
 	std::filesystem::path m_ConfigurationFilepathToLoad;

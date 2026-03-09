@@ -67,15 +67,7 @@ void MandelbrotLayer::OnUpdate(Timestep ts) {
 		window->OnUpdate(ts);
 	}
 
-	if (Input::IsKeyPressed(KeyCode::LeftControl) || Input::IsKeyPressed(KeyCode::RightControl)) {
-		if (Input::IsKeyDown(KeyCode::S)) {
-			SaveConfiguration(m_CurrentConfigurationFilepath);
-		}
-	}
-
-	if (Input::IsKeyPressed(KeyCode::F1)) {
-		m_AboutWindowOpen = true;
-	}
+	HandleKeyboardShortcuts();
 
 	if (m_RequestExport) {
 		ExportFrameAsImage();
@@ -130,6 +122,12 @@ void MandelbrotLayer::DrawMenuBar() {
 
 			UI::Separator();
 
+			if (ImGui::MenuItem("Settings", "Ctrl+,")) {
+				m_SettingsWindowOpen = true;
+			}
+
+			UI::Separator();
+
 			if (ImGui::MenuItem("Exit", "Alt+F4")) {
 				Application::Get().Close();
 			}
@@ -138,7 +136,7 @@ void MandelbrotLayer::DrawMenuBar() {
 		}
 
 		// Edit Menu
-		if (ImGui::BeginMenu("Edit")) {
+		/*if (ImGui::BeginMenu("Edit")) {
 			if (ImGui::MenuItem("Undo", "CTRL+Z")) {}
 			if (ImGui::MenuItem("Redo", "CTRL+Y")) {}
 			ImGui::Separator();
@@ -147,7 +145,7 @@ void MandelbrotLayer::DrawMenuBar() {
 			if (ImGui::MenuItem("Paste", "CTRL+V")) {}
 			if (ImGui::MenuItem("Delete", "DEL")) {}
 			ImGui::EndMenu();
-		}
+		}*/
 
 		// Export Menu
 		if (ImGui::BeginMenu("Export")) {
@@ -168,12 +166,12 @@ void MandelbrotLayer::DrawMenuBar() {
 
 		// View Menu
 		if (ImGui::BeginMenu("View")) {
-			ImGui::MenuItem("About", nullptr, &m_AboutWindowOpen);
-			ImGui::MenuItem("Inspector", nullptr, &m_InspectorWindowOpen);
-			ImGui::MenuItem("Project", nullptr, &m_ProjectWindowOpen);
-			ImGui::MenuItem("Settings", nullptr, &m_SettingsWindowOpen);
-			ImGui::MenuItem("Statistics", nullptr, &m_StatisticsWindowOpen);
-			ImGui::MenuItem("Viewport", nullptr, &m_ViewportWindowOpen);
+			ImGui::MenuItem("About", "F1", &m_AboutWindowOpen);
+			ImGui::MenuItem("Inspector", "Ctrl+I", &m_InspectorWindowOpen);
+			ImGui::MenuItem("Project", "Ctrl+P", &m_ProjectWindowOpen);
+			ImGui::MenuItem("Settings", "Ctrl+,", &m_SettingsWindowOpen);
+			ImGui::MenuItem("Statistics", "Ctrl+T", &m_StatisticsWindowOpen);
+			ImGui::MenuItem("Viewport", "Ctrl+V", &m_ViewportWindowOpen);
 
 			ImGui::EndMenu();
 		}
@@ -270,16 +268,8 @@ bool MandelbrotLayer::LoadConfiguration(const std::filesystem::path& filepath) {
 
 	if (serializer.Deserialize(filepath)) {
 		Log::Info("MandelbrotLayer::LoadConfiguration - Configuration has been loaded");
-
-		Application::Get().SetWindowTitle(filepath.filename().replace_extension("").string());
-
-		auto it = std::find(m_RecentConfigurationFilepaths.begin(), m_RecentConfigurationFilepaths.end(), filepath);
-		if (it != m_RecentConfigurationFilepaths.end()) {
-			m_RecentConfigurationFilepaths.erase(it);
-		}
-
-		m_RecentConfigurationFilepaths.push_back(filepath);
-
+		UpdateWindowTitle(filepath);
+		AddToRecentConfigurations(filepath);
 		return true;
 	}
 
@@ -288,46 +278,79 @@ bool MandelbrotLayer::LoadConfiguration(const std::filesystem::path& filepath) {
 	return false;
 }
 
-void MandelbrotLayer::ExportFrameAsImage() {
-	std::filesystem::path exportPath = "Export/Image";
-
-	if (!std::filesystem::exists(exportPath)) {
-		std::filesystem::create_directory(exportPath);
-	}
+std::filesystem::path MandelbrotLayer::BuildExportPath(const std::filesystem::path& folder, const std::string& extension) {
+	CheckOrCreateFolder(m_ExportFilepath);
+	CheckOrCreateFolder(folder);
 
 	auto now = std::chrono::system_clock::now();
 	auto in_time_t = std::chrono::system_clock::to_time_t(now);
 	std::stringstream ss;
-	ss << "Mandelbrot-" << std::put_time(std::localtime(&in_time_t), "%Y%m%d-%H%M%S") << ".png";
+	ss << "Mandelbrot-" << std::put_time(std::localtime(&in_time_t), "%Y%m%d-%H%M%S") << extension;
 
-	std::filesystem::path filepath = exportPath / ss.str();
+	return folder / ss.str();
+}
 
+void MandelbrotLayer::ExportFrameAsImage() {
+	auto filepath = BuildExportPath(m_ExportImageFilepath, ".png");
 	Renderer::ExportFrame(filepath);
-
 	Log::Info("MandelbrotLayer::ExportFrameAsImage - Frame exported successfully to: " + filepath.string());
 }
 
 void MandelbrotLayer::ExportConfiguration() {
-	std::filesystem::path exportPath = "Export/Configuration";
+	SaveConfiguration(BuildExportPath(m_ExportConfigurationFilepath, ".fractal"));
+}
 
-	if (!std::filesystem::exists(exportPath)) {
-		std::filesystem::create_directory(exportPath);
+void MandelbrotLayer::CheckOrCreateFolder(const std::filesystem::path& filepath) {
+	if (!std::filesystem::exists(filepath)) {
+		std::filesystem::create_directory(filepath);
+	}
+}
+
+void MandelbrotLayer::HandleKeyboardShortcuts() {
+	if (Input::IsKeyPressed(KeyCode::LeftControl) || Input::IsKeyPressed(KeyCode::RightControl)) {
+		if (Input::IsKeyDown(KeyCode::S)) {
+			SaveConfiguration(m_CurrentConfigurationFilepath);
+		}
+
+		if (Input::IsKeyDown(KeyCode::N)) {
+			NewConfiguration("Untitled", m_CurrentConfigurationFilepath);
+		}
+
+		if (Input::IsKeyDown(KeyCode::P)) {
+			m_ProjectWindowOpen = !m_ProjectWindowOpen;
+		}
+
+		if (Input::IsKeyDown(KeyCode::Comma)) {
+			m_SettingsWindowOpen = !m_SettingsWindowOpen;
+		}
+
+		if (Input::IsKeyDown(KeyCode::I)) {
+			m_InspectorWindowOpen = !m_InspectorWindowOpen;
+		}
+
+		if (Input::IsKeyDown(KeyCode::T)) {
+			m_StatisticsWindowOpen = !m_StatisticsWindowOpen;
+		}
+
+		if (Input::IsKeyDown(KeyCode::V)) {
+			m_ViewportWindowOpen = !m_ViewportWindowOpen;
+		}
 	}
 
-	auto now = std::chrono::system_clock::now();
-	auto in_time_t = std::chrono::system_clock::to_time_t(now);
-	std::stringstream ss;
-	ss << "Mandelbrot-" << std::put_time(std::localtime(&in_time_t), "%Y%m%d-%H%M%S") << ".fractal";
+	if (Input::IsKeyDown(KeyCode::F1)) {
+		m_AboutWindowOpen = !m_AboutWindowOpen;
+	}
+}
 
-	std::filesystem::path filepath = exportPath / ss.str();
+void MandelbrotLayer::UpdateWindowTitle(const std::filesystem::path& filepath) {
+	Application::Get().SetWindowTitle(filepath.filename().replace_extension("").string());
+}
 
-	MandelbrotSerializer serializer(m_FractalState.Target);
-
-	if (serializer.Serialize(filepath)) {
-		Log::Info("MandelbrotLayer::ExportConfiguration - Configuration has been exported");
-
-		return;
+void MandelbrotLayer::AddToRecentConfigurations(const std::filesystem::path& filepath) {
+	auto it = std::find(m_RecentConfigurationFilepaths.begin(), m_RecentConfigurationFilepaths.end(), filepath);
+	if (it != m_RecentConfigurationFilepaths.end()) {
+		m_RecentConfigurationFilepaths.erase(it);
 	}
 
-	Log::Warning("MandelbrotLayer::ExportConfiguration - Couldn't export Configuration");
+	m_RecentConfigurationFilepaths.push_back(filepath);
 }
