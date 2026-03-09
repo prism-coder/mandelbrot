@@ -7,17 +7,20 @@
  * The mouse button codes can be used to query the state of mouse buttons in the `Input` class, allowing for input handling in applications such as games or interactive software.
  */
 enum class MouseCode {
-	Button0 = 0,
-	Button1 = 1,
-	Button2 = 2,
-	Button3 = 3,
-	Button4 = 4,
-	Button5 = 5,
-	Button6 = 6,
-	Button7 = 7,
+	Button1 		= 0,
+	Button2 		= 1,
+	Button3 		= 2,
+	Button4 		= 3,
+	Button5 		= 4,
+	Button6 		= 5,
+	Button7 		= 6,
+	Button8 		= 7,
 
-	ButtonLast = Button7,
-	ButtonLeft = Button0,
-	ButtonRight = Button1,
-	ButtonMiddle = Button2
+	ButtonLeft 		= Button1,
+	ButtonRight 	= Button2,
+	ButtonMiddle 	= Button3,
+
+	// Limits
+
+	Last 			= Button8
 };
