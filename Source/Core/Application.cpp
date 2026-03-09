@@ -229,27 +229,40 @@ void Application::LoadAppIcon() {
 }
 
 void Application::Run() {
-	Log::Trace("Application::Run - Starting the Main Loop");
+	Log::Trace("Application::Run - Starting the main loop");
 
+	// Main application loop that continues until the window should close or the application is signaled to stop running.
 	while (!glfwWindowShouldClose(m_WindowHandle) && m_Running) {
+		// Calculate the time elapsed since the last frame to use for updating layers and managing timing.
 		float time = (float)glfwGetTime();
 		Timestep timestep = time - m_LastFrameTime;
 		m_LastFrameTime = time;
 
+		// Begin the UI frame, which will prepare for rendering the user interface for this frame.
 		UI::Begin();
 
 		for (Layer* layer : m_LayerStack) {
+			// Update each layer with the calculated timestep.
 			layer->OnUpdate(timestep);
+
+			// Render the UI for each layer.
 			layer->OnUIRender();
 		}
 
+		// End the UI frame, which will finalize the rendering of the user interface for this frame.
 		UI::End();
 
+		// Update the input state at the end of the frame to ensure that input states are correctly updated for the next frame.
 		Input::OnUpdate();
 
+		// Swap the front and back buffers to display the rendered frame and poll for input events to process user interactions.
 		glfwSwapBuffers(m_WindowHandle);
+
+		// Poll for and process input events, which will trigger the appropriate callbacks for key input, mouse input, and other events.
 		glfwPollEvents();
 	}
+
+	Log::Trace("Application::Run - Stopping the main loop");
 }
 
 void Application::PushLayer(Layer* layer) {
