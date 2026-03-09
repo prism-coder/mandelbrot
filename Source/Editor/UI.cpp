@@ -454,12 +454,14 @@ void UI::DisabledTextarea(const char* label, std::string& text, bool valid) {
 	EndPropertyGrid();
 }
 
-void UI::Link(const char* label, const std::string& link) {
+bool UI::Link(const char* label, const std::string& link) {
 	BeginPropertyGrid(label);
 
-	ImGui::TextLinkOpenURL(link.c_str());
+	bool changed = ImGui::TextLinkOpenURL(link.c_str());
 
 	EndPropertyGrid();
+
+	return changed;
 }
 
 void UI::Text(const std::string& text) {
@@ -500,6 +502,15 @@ void UI::DisabledInputText(std::string& text, bool valid) {
 	}
 
 	ImGui::EndDisabled();
+}
+
+bool UI::Link(const std::string& link) {
+	return ImGui::TextLinkOpenURL(link.c_str());
+}
+
+void UI::OpenLink(const std::string& link) {
+	ImGuiContext& g = *GImGui;
+	g.PlatformIO.Platform_OpenInShellFn(&g, link.c_str());
 }
 
 void UI::Spacing() {

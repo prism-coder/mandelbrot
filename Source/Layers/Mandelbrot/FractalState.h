@@ -8,22 +8,31 @@
 
 #include <glm/gtx/compatibility.hpp>
 
+/**
+ * This struct holds the current state of the fractal being rendered, as well as the target state that is modified by user input and file uploads.
+ */
 struct FractalState {
-	// The state being rendered
+	/// @brief The current state of the fractal parameters that is being rendered.
 	Mandelbrot Current;
 
-	// The state that checks and file uploads modify
+	/// @brief The target state of the fractal parameters that is modified by user input and file uploads.
 	Mandelbrot Target;
 
-	// Smoothing factor. A higher value = faster transition.
+	/// @brief The smoothing factor for parameter interpolation. Higher values result in faster transitions.
 	float Smoothing = 5.0f;
 
 	// Speed for movement, rotation, zoom and power. A higher value = faster movement.
-	float MovementSpeed = 1.0f;
-	float RotationSpeed = 1.0f;
-	float ZoomSpeed = 1.0f;
-	float PowerSpeed = 1.0f;
+	float MovementSpeed = 2.0f;
+	float RotationSpeed = 2.0f;
+	float ZoomSpeed = 2.0f;
+	float PowerSpeed = 2.0f;
 
+	/**
+	 * Updates the current state by interpolating towards the target state based on the elapsed time (Timestep).
+	 * This method should be called every frame with the time since the last frame to ensure smooth transitions between parameter changes.
+	 * 
+	 * @param ts The time elapsed since the last update, used to calculate the interpolation factor for smooth transitions.
+	 */
 	void Update(Timestep ts) {
 		// This is the formula for exponential interpolation, which is independent of the framerate
 		// and gives a very pleasant "acceleration and braking" feel.

@@ -7,7 +7,7 @@ Theme:
     WindowBorderSize: 1
     WindowMinSize: [32, 32]
     WindowTitleAlign: [0.5, 0.5]
-    WindowMenuButtonPosition: Left
+    WindowMenuButtonPosition: None
     ChildRounding: 6
     ChildBorderSize: 1
     PopupRounding: 6

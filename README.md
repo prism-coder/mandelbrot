@@ -85,14 +85,20 @@ A high-performance, interactive Mandelbrot set explorer built with C++ and OpenG
 
 2. Run the setup script:
    ```bash
-   Scripts/Setup.bat
+   # Windows VS2026:
+   Scripts/Setup/Windows-vs2026.bat
+
+   # Windows VS2022:
+   Scripts/Setup/Windows-vs2022.bat
    ```
 
 3. Build the project:
-   Open Mandelbrot.sln in Visual Studio and build
+   ```
+   Open Mandelbrot.sln(x) in Visual Studio and build
+   ```
 
 4. Run the application:
-   ```bash
+   ```
    bin/Release-windows-x86_64/Mandelbrot/Mandelbrot.exe
    ```
 
@@ -122,6 +128,7 @@ The project uses git submodules for external dependencies:
 - Load presets from the Project window
 - Save custom configurations for later use
 - Export high-resolution images of your creations
+- Export the current fractal configuration
 
 ### Customization
 - Choose from 40+ UI themes in Settings
@@ -134,30 +141,34 @@ Configurations are stored in YAML format with the following structure:
 
 ```yaml
 Mandelbrot:
-  Algorithm: 0  # 0: Mandelbrot, 1: Burning Ship, 2: Tricorn
-  Power: 2.0
-  Bailout: 16.0
-  MaxIterations: 256
-  Zoom: 1.0
-  Position: [-0.5, 0.0]
-  Rotation: 0.0
-  JuliaMode: false
-  JuliaC: [-0.8, 0.156]
-  ExteriorColoring: 1  # 0: Step, 1: Smooth, 2: DistanceEstimation
-  InteriorColoring: 2  # 0: Black, 1: White, 2: CustomColor
-  InteriorColor: [0.0, 0.0, 0.0]
-  ColorFrequency: 1.0
-  ColorOffset: 0.0
-  OrbitColoring: false
-  DistanceScale: 50.0
-  ColorPalette:
-    Colors: 
-      - [0.0, 0.0, 0.0]
-      - [1.0, 0.0, 0.0]
-      - [1.0, 1.0, 0.0]
-      - [0.0, 1.0, 0.0]
-  Trap:
-    Type: 0  # 0: None, 1: Point, 2: Circle, 3: Line, 4: Box, 5: Cross
+  FractalParameters:
+    Algorithm: Mandelbrot # Mandelbrot, Burning Ship, Tricorn
+    Power: 2.0
+    Bailout: 16.0
+    MaxIterations: 256
+  ViewParameters:
+    Zoom: 1.0
+    Position: [-0.5, 0.0]
+    Rotation: 0.0
+  JuliaParameters:
+    JuliaMode: false
+    JuliaC: [-0.8, 0.156]
+  ColoringParameters:
+    ExteriorColoring: Smooth # Step, Smooth, DistanceEstimation
+    InteriorColoring: Black # Black, White, CustomColor
+    InteriorColor: [0.0, 0.0, 0.0]
+    ColorFrequency: 1.0
+    ColorOffset: 0.0
+    OrbitColoring: false
+    DistanceScale: 50.0
+    ColorPalette:
+      Colors: 
+        - [0.0, 0.0, 0.0]
+        - [1.0, 0.0, 0.0]
+        - [1.0, 1.0, 0.0]
+        - [0.0, 1.0, 0.0]
+  OrbitTrap:
+    Type: None # None, Point, Circle, Line, Box, Cross
     P1: [0.0, 0.0]
     P2: [0.0, 0.0]
     Color: [1.0, 1.0, 1.0]
@@ -191,7 +202,15 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Screenshots
 
-*(Add screenshots here showing the application interface and various fractal renders)*
+![Default Configuration](./Screenshots/0.png)
+
+![Elephant Valley Configuration](./Screenshots/1.png)
+
+![Serpent's Eye Julia Configuration](./Screenshots/2.png)
+
+![Electric Seahorse Configuration](./Screenshots/3.png)
+
+![Project and Settings Windows](./Screenshots/4.png)
 
 ---
 

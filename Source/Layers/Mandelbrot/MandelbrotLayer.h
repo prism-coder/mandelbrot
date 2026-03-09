@@ -28,6 +28,7 @@ private:
 	bool LoadConfiguration(const std::filesystem::path& filepath);
 
 	void ExportFrameAsImage();
+	void ExportConfiguration();
 private:
 	bool m_AboutWindowOpen = false;
 	bool m_InspectorWindowOpen = true;

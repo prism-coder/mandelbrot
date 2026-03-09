@@ -86,13 +86,17 @@ public:
 	static void DisabledText(const char* label, const std::string& text);
 	static void DisabledInputText(const char* label, std::string& text, bool valid = true);
 	static void DisabledTextarea(const char* label, std::string& text, bool valid = true);
-	static void Link(const char* label, const std::string& link);
+	static bool Link(const char* label, const std::string& link);
 
 	// Text widgets without Label
 	static void Text(const std::string& text);
 	static bool InputText(std::string& text, bool valid = true);
 	static void DisabledText(const std::string& text);
 	static void DisabledInputText(std::string& text, bool valid = true);
+	static bool Link(const std::string& link);
+
+	// Utilities
+	static void OpenLink(const std::string& link);
 
 	// Spacing widgets
 	static void Spacing();

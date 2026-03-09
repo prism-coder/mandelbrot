@@ -155,6 +155,14 @@ void MandelbrotLayer::DrawMenuBar() {
 				m_RequestExport = true;
 			}
 
+			UI::Tooltip("Export the current frame as a PNG image to the 'Export/Image' folder.");
+
+			if (ImGui::MenuItem("Configuration (.fractal)")) {
+				ExportConfiguration();
+			}
+
+			UI::Tooltip("Export the current fractal configuration to the 'Export/Configuration' folder.");
+
 			ImGui::EndMenu();
 		}
 
@@ -172,10 +180,17 @@ void MandelbrotLayer::DrawMenuBar() {
 
 		// Help Menu
 		if (ImGui::BeginMenu("Help")) {
-			if (ImGui::MenuItem("Documentation")) {}
+			if (ImGui::MenuItem("Documentation")) {
+				UI::OpenLink("https://github.com/prism-coder/mandelbrot");
+			}
+
+			UI::Tooltip("Open the app documentation.");
+
 			if (ImGui::MenuItem("About")) {
 				m_AboutWindowOpen = true;
 			}
+
+			UI::Tooltip("Open the about window.");
 
 			ImGui::EndMenu();
 		}
@@ -274,7 +289,7 @@ bool MandelbrotLayer::LoadConfiguration(const std::filesystem::path& filepath) {
 }
 
 void MandelbrotLayer::ExportFrameAsImage() {
-	std::filesystem::path exportPath = "Export";
+	std::filesystem::path exportPath = "Export/Image";
 
 	if (!std::filesystem::exists(exportPath)) {
 		std::filesystem::create_directory(exportPath);
@@ -290,4 +305,29 @@ void MandelbrotLayer::ExportFrameAsImage() {
 	Renderer::ExportFrame(filepath);
 
 	Log::Info("MandelbrotLayer::ExportFrameAsImage - Frame exported successfully to: " + filepath.string());
+}
+
+void MandelbrotLayer::ExportConfiguration() {
+	std::filesystem::path exportPath = "Export/Configuration";
+
+	if (!std::filesystem::exists(exportPath)) {
+		std::filesystem::create_directory(exportPath);
+	}
+
+	auto now = std::chrono::system_clock::now();
+	auto in_time_t = std::chrono::system_clock::to_time_t(now);
+	std::stringstream ss;
+	ss << "Mandelbrot-" << std::put_time(std::localtime(&in_time_t), "%Y%m%d-%H%M%S") << ".fractal";
+
+	std::filesystem::path filepath = exportPath / ss.str();
+
+	MandelbrotSerializer serializer(m_FractalState.Target);
+
+	if (serializer.Serialize(filepath)) {
+		Log::Info("MandelbrotLayer::ExportConfiguration - Configuration has been exported");
+
+		return;
+	}
+
+	Log::Warning("MandelbrotLayer::ExportConfiguration - Couldn't export Configuration");
 }
