@@ -457,11 +457,11 @@ void UI::DisabledTextarea(const char* label, std::string& text, bool valid) {
 bool UI::Link(const char* label, const std::string& link) {
 	BeginPropertyGrid(label);
 
-	bool changed = ImGui::TextLinkOpenURL(link.c_str());
+	bool clicked = ImGui::TextLinkOpenURL(link.c_str());
 
 	EndPropertyGrid();
 
-	return changed;
+	return clicked;
 }
 
 void UI::Text(const std::string& text) {
