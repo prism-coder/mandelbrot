@@ -38,6 +38,13 @@ uniform vec2 u_TrapP2;
 uniform vec3 u_TrapColor;
 uniform float u_TrapBlend;
 
+#define PI 3.14159265358979323846
+
+// Complex multiplication
+vec2 CMul(vec2 a, vec2 b) {
+    return vec2(a.x * b.x - a.y * b.y, a.x * b.y + a.y * b.x);
+}
+
 // Complex power: z^p
 vec2 CPow(vec2 z, float p) {
     float r = length(z);
@@ -115,12 +122,19 @@ void main() {
     }
     float minTrapDist = 1e20; // Minimum distance for Orbit Trap
 
+    bool needsDerivative = (u_ExteriorColoring == 2 || u_TrapType > 0);
+    bool isPow2 = (u_Power == 2.0);
+
     for (i = 0; i < u_MaxIterations; i++) {
         // The derivative is updated using the current 'z'
-        if (u_ExteriorColoring == 2 || u_TrapType > 0) {
+        if (needsDerivative) {
             // Avoid singularity at the origin for non-integer powers
-            if (length(z) > 1e-6) {
-                dz = u_Power * CPow(z, u_Power - 1.0) * dz;
+            if (dot(z, z) > 1e-12) {
+                if (isPow2) {
+                    dz = 2.0 * CMul(z, dz);
+                } else {
+                    dz = u_Power * CMul(CPow(z, u_Power - 1.0), dz);
+                }
             }
         }
 
@@ -131,7 +145,11 @@ void main() {
         }
 
         // Z Update
-        z = CPow(z, u_Power) + c;
+        if (isPow2) {
+            z = vec2(z.x * z.x - z.y * z.y, 2.0 * z.x * z.y) + c;
+        } else {
+            z = CPow(z, u_Power) + c;
+        }
 
         // For Mandelbrot, on the first iteration, dz must be 1
         if (!u_JuliaMode && i == 0) {
@@ -175,8 +193,9 @@ void main() {
         if (u_ExteriorColoring == 0) { // Step
             t = float(i) / float(u_MaxIterations);
         } else if (u_ExteriorColoring == 1) { // Smooth
-            float log_zn = log(dot(z, z)) / 2.0;
-            float nu = log(log_zn / log(2.0)) / log(2.0);
+            float logP = log(u_Power);
+            float log_zn = log(dot(z, z)) * 0.5;
+            float nu = log(log_zn / logP) / logP;
             t = (float(i) + 1.0 - nu) / float(u_MaxIterations);
         } else { // Distance Estimation
             // Calculate the squares of the magnitudes
@@ -198,7 +217,7 @@ void main() {
 
         if (u_OrbitColoring) {
             // Use the angle of the end point 'z' to modify the color
-            float angle = atan(z.y, z.x) / (2.0 * 3.14159265);
+            float angle = atan(z.y, z.x) / (2.0 * PI);
             vec3 orbit_color = GetPaletteColor(angle);
             // Mix the original color with the orbit color
             finalColor = mix(finalColor, orbit_color, 0.5);
