@@ -19,9 +19,11 @@ public:
 private:
 	void DrawSettings();
 
-	void DrawApplicationSettings(ApplicationSettings& application);
-	void DrawEditorSettings(EditorSettings& editor);
-	void DrawRenderingSettings(RenderingSettings& rendering);
+	void DrawApplicationSettings(ApplicationSettings& applicationSettings);
+	void DrawEditorSettings(EditorSettings& editorSettings);
+	void DrawExportSettings(ExportSettings& exportSettings);
+	void DrawNavigationSettings(NavigationSettings& navigationSettings);
+	void DrawRenderingSettings(RenderingSettings& renderingSettings);
 
 	void DrawWIP();
 private:
@@ -30,4 +32,6 @@ private:
 
 	std::vector<EditorTheme> m_Themes;
 	std::vector<RenderingEngine> m_RenderingEngines;
+	std::vector<WindowMode> m_WindowModes;
+	std::vector<ExportImageFormat> m_ExportImageFormats;
 };

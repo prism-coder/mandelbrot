@@ -21,8 +21,9 @@ void SettingsWindow::OnAttach() {
 	m_Categories = {
 		Category::Application,
 		Category::Editor,
+		Category::Export,
 		//Category::Graphics,
-		//Category::Input,
+		Category::Input,
 		//Category::Localization,
 		//Category::Quality,
 		Category::Rendering,
@@ -81,6 +82,18 @@ void SettingsWindow::OnAttach() {
 		RenderingEngine::OpenGL,
 		RenderingEngine::DirectX,
 		RenderingEngine::Vulkan
+	};
+
+	m_WindowModes = {
+		WindowMode::Windowed,
+		WindowMode::Fullscreen,
+		WindowMode::Borderless
+	};
+
+	m_ExportImageFormats = {
+		ExportImageFormat::PNG,
+		ExportImageFormat::JPEG,
+		ExportImageFormat::BMP
 	};
 }
 
@@ -166,34 +179,44 @@ void SettingsWindow::DrawSettings() {
 	switch (m_CurrentCategory) {
 		case Category::Application: DrawApplicationSettings(settings.Application);	break;
 		case Category::Editor:		DrawEditorSettings(settings.Editor);			break;
+		case Category::Input:		DrawNavigationSettings(settings.Navigation);	break;
 		case Category::Rendering:	DrawRenderingSettings(settings.Rendering);		break;
+		case Category::Export:		DrawExportSettings(settings.Export);			break;
 		default:					DrawWIP();										break;
 	}
 }
 
-void SettingsWindow::DrawApplicationSettings(ApplicationSettings& application) {
-	UI::DisabledInputText("Name", application.Name);
+void SettingsWindow::DrawApplicationSettings(ApplicationSettings& applicationSettings) {
+	UI::DisabledInputText("Name", applicationSettings.Name);
 	UI::Tooltip("The name of the Application.");
 
-	UI::ConfigurationSlot("Startup Configuration", application.StartupConfiguration);
+	UI::ConfigurationSlot("Startup Configuration", applicationSettings.StartupConfiguration);
 	UI::Tooltip("The startup Fractal Configuration.\nUse the Project Window to drag a Startup Configuration from the Assets Folder.\nOr set it up manually through the 'Settings.yaml' file.");
 
-	const auto& version = application.Version;
+	UI::Separator();
 
-	std::string versionStr = (
-		std::to_string(version.Major) + "." +
-		std::to_string(version.Minor) + "." +
-		std::to_string(version.Patch)
-	);
+	const auto& versionSettings = applicationSettings.Version;
+
+	std::string versionStr = versionSettings.GetVersion();
 
 	UI::DisabledInputText("Version", versionStr);
 	UI::Tooltip("The version of the Application.");
 
-	UI::Bool("Maximized", application.Maximized);
+	UI::Separator();
+
+	UI::Bool("Maximized", applicationSettings.Maximized);
 	UI::Tooltip("Whether the Application will start Maximized or not.");
 
-	UI::Bool("Debug Mode", application.DebugMode);
-	UI::Tooltip("When the Debug Mode is activated, a .log file will be written on the root of the Application folder.");
+	UI::Bool("Debug Mode", applicationSettings.DebugMode);
+	UI::Tooltip("When the Debug Mode is activated, additional diagnostic information may be shown.");
+
+	UI::Bool("Log to File", applicationSettings.LogToFile);
+	UI::Tooltip("When enabled, all log output is also written to 'Application.log' on disk.");
+
+	UI::Bool("Escape Closes App", applicationSettings.EscapeClosesApp);
+	UI::Tooltip("When enabled, pressing Escape will close the application.");
+
+	UI::Separator();
 }
 
 void SettingsWindow::DrawEditorSettings(EditorSettings& editor) {
@@ -224,11 +247,60 @@ void SettingsWindow::DrawEditorSettings(EditorSettings& editor) {
 
 	UI::DragInt("Auto Save Interval", editor.AutoSaveInterval, 0, 86400);
 	UI::Tooltip("Auto Save is not supported yet.");
+
+	UI::Separator();
+}
+
+void SettingsWindow::DrawExportSettings(ExportSettings& exportSettings) {
+	UI::Dropdown("Image Format", m_ExportImageFormats, exportSettings.ImageFormat, Utilities::ExportImageFormatToString);
+	UI::Tooltip("The image format used when exporting a frame.");
+
+	if (exportSettings.ImageFormat == ExportImageFormat::JPEG) {
+		UI::SliderInt("Image Quality", exportSettings.ImageQuality, 0, 100);
+		UI::Tooltip("JPEG compression quality (0 = smallest file, 100 = best quality).");
+	}
+
+	std::string folderStr = exportSettings.Folder.string();
+	if (UI::InputText("Export Folder", folderStr)) {
+		exportSettings.Folder = folderStr;
+	}
+	UI::Tooltip("Root folder where exported images and configurations are saved.");
+
+	UI::Separator();
+}
+
+void SettingsWindow::DrawNavigationSettings(NavigationSettings& navigation) {
+	UI::DragFloat("Movement Speed", navigation.MovementSpeed, 0.1f, 50.0f);
+	UI::Tooltip("Pan speed when using WASD or dragging the viewport.");
+
+	UI::DragFloat("Rotation Speed", navigation.RotationSpeed, 0.1f, 50.0f);
+	UI::Tooltip("Rotation speed when using the Q and E keys.");
+
+	UI::DragFloat("Zoom Speed", navigation.ZoomSpeed, 0.1f, 50.0f);
+	UI::Tooltip("Zoom speed when using the scroll wheel, Shift or Ctrl.");
+
+	UI::DragFloat("Power Speed", navigation.PowerSpeed, 0.1f, 50.0f);
+	UI::Tooltip("Speed when changing the fractal power with PageUp / PageDown.");
+
+	UI::Separator();
+
+	UI::DragFloat("Smoothing", navigation.Smoothing, 0.1f, 50.0f);
+	UI::Tooltip("Interpolation smoothing factor.\nHigher values produce snappier, faster transitions.");
+
+	UI::Separator();
+
+	UI::Bool("Invert Zoom", navigation.InvertZoom);
+	UI::Tooltip("Reverses the scroll wheel zoom direction.");
+
+	UI::Separator();
 }
 
 void SettingsWindow::DrawRenderingSettings(RenderingSettings& rendering) {
 	UI::Dropdown("Engine", m_RenderingEngines, rendering.Engine, Utilities::RenderingEngineToString);
 	UI::Tooltip("Select a Rendering API.\nCurrently, only OpenGL is supported.");
+
+	UI::Dropdown("Window Mode", m_WindowModes, rendering.Mode, Utilities::WindowModeToString);
+	UI::Tooltip("Windowed: standard window.\nFullscreen: exclusive fullscreen.\nBorderless: borderless window covering the screen.");
 
 	if (UI::CollapsingHeader("Resolution")) {
 		auto& resolution = rendering.Resolution;
@@ -247,11 +319,18 @@ void SettingsWindow::DrawRenderingSettings(RenderingSettings& rendering) {
 		UI::Separator();
 	}
 
-	UI::Bool("Fullscreen", rendering.Fullscreen);
-	UI::Tooltip("Whether the Application will start in Full Screen mode.");
-
 	UI::Bool("VSync", rendering.VSync);
 	UI::Tooltip("Whether VSync is activated or not.");
+
+	UI::Bool("Lock Framerate", rendering.LockFramerate);
+	UI::Tooltip("When enabled, the frame rate will be capped to the value specified in 'Target Frame Rate'.");
+
+	if (rendering.LockFramerate) {
+		UI::DragInt("Target Frame Rate", rendering.TargetFrameRate, 1, 960);
+		UI::Tooltip("Frame rate cap in FPS. Set to 0 for uncapped rendering.");
+	}
+
+	UI::Separator();
 }
 
 void SettingsWindow::DrawWIP() {
