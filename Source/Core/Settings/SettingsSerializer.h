@@ -60,6 +60,20 @@ private:
 	 * @param out The YAML emitter to which the rendering settings will be serialized.
 	 */
 	void SerializeRenderingSettings(YAML::Emitter& out);
+
+	/**
+	 * Serializes the navigation settings to a YAML emitter.
+	 * 
+	 * @param out The YAML emitter to which the navigation settings will be serialized.
+	 */
+	void SerializeNavigationSettings(YAML::Emitter& out);
+
+	/**
+	 * Serializes the export settings to a YAML emitter.
+	 * 
+	 * @param out The YAML emitter to which the export settings will be serialized.
+	 */
+	void SerializeExportSettings(YAML::Emitter& out);
 #pragma endregion
 
 #pragma region - Deserialization -
@@ -83,6 +97,20 @@ private:
 	 * @param settingsNode The YAML node containing the rendering settings to be deserialized.
 	 */
 	void DeserializeRenderingSettings(const YAML::Node& settingsNode);
+
+	/**
+	 * Deserializes the navigation settings from a YAML node and updates the current settings accordingly.
+	 * 
+	 * @param settingsNode The YAML node containing the navigation settings to be deserialized.
+	 */
+	void DeserializeNavigationSettings(const YAML::Node& settingsNode);
+
+	/**
+	 * Deserializes the export settings from a YAML node and updates the current settings accordingly.
+	 * 
+	 * @param settingsNode The YAML node containing the export settings to be deserialized.
+	 */
+	void DeserializeExportSettings(const YAML::Node& settingsNode);
 #pragma endregion
 
 private:

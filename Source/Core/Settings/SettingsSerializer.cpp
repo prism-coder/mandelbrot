@@ -90,6 +90,8 @@ bool SettingsSerializer::Serialize(const std::filesystem::path& filepath) {
 				SerializeApplicationSettings(out);
 				SerializeEditorSettings(out);
 				SerializeRenderingSettings(out);
+				SerializeNavigationSettings(out);
+				SerializeExportSettings(out);
 			}
 			out << YAML::EndMap; // Settings
 		}
@@ -157,6 +159,8 @@ bool SettingsSerializer::Deserialize(const std::filesystem::path& filepath) {
 	DeserializeApplicationSettings(settingsNode);
 	DeserializeEditorSettings(settingsNode);
 	DeserializeRenderingSettings(settingsNode);
+	DeserializeNavigationSettings(settingsNode);
+	DeserializeExportSettings(settingsNode);
 
 	Log::Trace("SettingsSerializer::Deserialize - Loading complete");
 
@@ -185,6 +189,7 @@ void SettingsSerializer::SerializeApplicationSettings(YAML::Emitter& out) {
 		out << YAML::Key << "Maximized" << YAML::Value << application.Maximized;
 		out << YAML::Key << "DebugMode" << YAML::Value << application.DebugMode;
 		out << YAML::Key << "EscapeClosesApp" << YAML::Value << application.EscapeClosesApp;
+		out << YAML::Key << "LogToFile" << YAML::Value << application.LogToFile;
 	}
 	out << YAML::EndMap; // Application
 
@@ -206,6 +211,18 @@ void SettingsSerializer::SerializeEditorSettings(YAML::Emitter& out) {
 			out << YAML::Key << "ColumnWidth" << YAML::Value << appearance.ColumnWidth;
 		}
 		out << YAML::EndMap; // Appearance
+
+		out << YAML::Key << "Windows" << YAML::Value << YAML::BeginMap; // Windows
+		{
+			const auto& windows = editor.Windows;
+			out << YAML::Key << "ShowAbout"      << YAML::Value << windows.ShowAbout;
+			out << YAML::Key << "ShowInspector"  << YAML::Value << windows.ShowInspector;
+			out << YAML::Key << "ShowProject"    << YAML::Value << windows.ShowProject;
+			out << YAML::Key << "ShowSettings"   << YAML::Value << windows.ShowSettings;
+			out << YAML::Key << "ShowStatistics" << YAML::Value << windows.ShowStatistics;
+			out << YAML::Key << "ShowViewport"   << YAML::Value << windows.ShowViewport;
+		}
+		out << YAML::EndMap; // Windows
 
 		out << YAML::Key << "AutoSaveInterval" << YAML::Value << editor.AutoSaveInterval;
 	}
@@ -230,8 +247,10 @@ void SettingsSerializer::SerializeRenderingSettings(YAML::Emitter& out) {
 		}
 		out << YAML::EndMap; // Resolution
 
-		out << YAML::Key << "Fullscreen" << YAML::Value << rendering.Fullscreen;
+		out << YAML::Key << "Mode" << YAML::Value << Utilities::WindowModeToString(rendering.Mode);
 		out << YAML::Key << "VSync" << YAML::Value << rendering.VSync;
+		out << YAML::Key << "LockFramerate" << YAML::Value << rendering.LockFramerate;
+		out << YAML::Key << "TargetFrameRate" << YAML::Value << rendering.TargetFrameRate;
 	}
 	out << YAML::EndMap; // Rendering
 
@@ -279,6 +298,10 @@ void SettingsSerializer::DeserializeApplicationSettings(const YAML::Node& settin
 		if (const auto& escapeClosesAppNode = applicationNode["EscapeClosesApp"]) {
 			application.EscapeClosesApp = escapeClosesAppNode.as<bool>();
 		}
+
+		if (const auto& logToFileNode = applicationNode["LogToFile"]) {
+			application.LogToFile = logToFileNode.as<bool>();
+		}
 	}
 
 	Log::Trace("SettingsSerializer::DeserializeApplicationSettings - Application Settings Deserialized");
@@ -307,6 +330,34 @@ void SettingsSerializer::DeserializeEditorSettings(const YAML::Node& settingsNod
 
 			if (const auto& columnWidthNode = appearanceNode["ColumnWidth"]) {
 				appearance.ColumnWidth = columnWidthNode.as<float>();
+			}
+		}
+
+		if (const auto& windowsNode = editorNode["Windows"]) {
+			auto& windows = editor.Windows;
+
+			if (const auto& showAboutNode = windowsNode["ShowAbout"]) {
+				windows.ShowAbout = showAboutNode.as<bool>();
+			}
+
+			if (const auto& showInspectorNode = windowsNode["ShowInspector"]) {
+				windows.ShowInspector = showInspectorNode.as<bool>();
+			}
+
+			if (const auto& showProjectNode = windowsNode["ShowProject"]) {
+				windows.ShowProject = showProjectNode.as<bool>();
+			}
+
+			if (const auto& showSettingsNode = windowsNode["ShowSettings"]) {
+				windows.ShowSettings = showSettingsNode.as<bool>();
+			}
+
+			if (const auto& showStatisticsNode = windowsNode["ShowStatistics"]) {
+				windows.ShowStatistics = showStatisticsNode.as<bool>();
+			}
+
+			if (const auto& showViewportNode = windowsNode["ShowViewport"]) {
+				windows.ShowViewport = showViewportNode.as<bool>();
 			}
 		}
 
@@ -344,16 +395,120 @@ void SettingsSerializer::DeserializeRenderingSettings(const YAML::Node& settings
 			}
 		}
 
+		// Legacy: map old 'Fullscreen' bool to the new WindowMode enum.
 		if (const auto& fullscreenNode = renderingNode["Fullscreen"]) {
-			rendering.Fullscreen = fullscreenNode.as<bool>();
+			if (fullscreenNode.as<bool>()) {
+				rendering.Mode = WindowMode::Fullscreen;
+			}
+		}
+
+		if (const auto& modeNode = renderingNode["Mode"]) {
+			rendering.Mode = Utilities::StringToWindowMode(modeNode.as<std::string>());
 		}
 
 		if (const auto& vSyncNode = renderingNode["VSync"]) {
 			rendering.VSync = vSyncNode.as<bool>();
 		}
+
+		if (const auto& lockFramerateNode = renderingNode["LockFramerate"]) {
+			rendering.LockFramerate = lockFramerateNode.as<bool>();
+		}
+
+		if (const auto& targetFrameRateNode = renderingNode["TargetFrameRate"]) {
+			rendering.TargetFrameRate = targetFrameRateNode.as<int>();
+		}
 	}
 
 	Log::Trace("SettingsSerializer::DeserializeRenderingSettings - Rendering Settings Deserialized");
+}
+
+void SettingsSerializer::SerializeNavigationSettings(YAML::Emitter& out) {
+	Log::Trace("SettingsSerializer::SerializeNavigationSettings - Serializing Navigation Settings");
+
+	out << YAML::Key << "Navigation" << YAML::Value << YAML::BeginMap; // Navigation
+	{
+		const auto& nav = m_Settings.Navigation;
+		out << YAML::Key << "MovementSpeed" << YAML::Value << nav.MovementSpeed;
+		out << YAML::Key << "RotationSpeed" << YAML::Value << nav.RotationSpeed;
+		out << YAML::Key << "ZoomSpeed" << YAML::Value << nav.ZoomSpeed;
+		out << YAML::Key << "PowerSpeed" << YAML::Value << nav.PowerSpeed;
+		out << YAML::Key << "Smoothing" << YAML::Value << nav.Smoothing;
+		out << YAML::Key << "InvertZoom" << YAML::Value << nav.InvertZoom;
+	}
+	out << YAML::EndMap; // Navigation
+
+	Log::Trace("SettingsSerializer::SerializeNavigationSettings - Navigation Settings Serialized");
+}
+
+void SettingsSerializer::SerializeExportSettings(YAML::Emitter& out) {
+	Log::Trace("SettingsSerializer::SerializeExportSettings - Serializing Export Settings");
+
+	out << YAML::Key << "Export" << YAML::Value << YAML::BeginMap; // Export
+	{
+		const auto& exp = m_Settings.Export;
+		out << YAML::Key << "ImageFormat" << YAML::Value << Utilities::ExportImageFormatToString(exp.ImageFormat);
+		out << YAML::Key << "ImageQuality" << YAML::Value << exp.ImageQuality;
+		out << YAML::Key << "Folder" << YAML::Value << exp.Folder.string();
+	}
+	out << YAML::EndMap; // Export
+
+	Log::Trace("SettingsSerializer::SerializeExportSettings - Export Settings Serialized");
+}
+
+void SettingsSerializer::DeserializeNavigationSettings(const YAML::Node& settingsNode) {
+	Log::Trace("SettingsSerializer::DeserializeNavigationSettings - Deserializing Navigation Settings");
+
+	if (const auto& navNode = settingsNode["Navigation"]) {
+		auto& nav = m_Settings.Navigation;
+
+		if (const auto& movementSpeedNode = navNode["MovementSpeed"]) {
+			nav.MovementSpeed = movementSpeedNode.as<float>();
+		}
+
+		if (const auto& rotationSpeedNode = navNode["RotationSpeed"]) {
+			nav.RotationSpeed = rotationSpeedNode.as<float>();
+		}
+
+		if (const auto& zoomSpeedNode = navNode["ZoomSpeed"]) {
+			nav.ZoomSpeed = zoomSpeedNode.as<float>();
+		}
+
+		if (const auto& powerSpeedNode = navNode["PowerSpeed"]) {
+			nav.PowerSpeed = powerSpeedNode.as<float>();
+		}
+
+		if (const auto& smoothingNode = navNode["Smoothing"]) {
+			nav.Smoothing = smoothingNode.as<float>();
+		}
+
+		if (const auto& invertZoomNode = navNode["InvertZoom"]) {
+			nav.InvertZoom = invertZoomNode.as<bool>();
+		}
+	}
+
+	Log::Trace("SettingsSerializer::DeserializeNavigationSettings - Navigation Settings Deserialized");
+}
+
+void SettingsSerializer::DeserializeExportSettings(const YAML::Node& settingsNode) {
+	Log::Trace("SettingsSerializer::DeserializeExportSettings - Deserializing Export Settings");
+
+	if (const auto& exportNode = settingsNode["Export"]) {
+		auto& exp = m_Settings.Export;
+
+		if (const auto& imageFormatNode = exportNode["ImageFormat"]) {
+			exp.ImageFormat = Utilities::StringToExportImageFormat(imageFormatNode.as<std::string>());
+		}
+
+		if (const auto& imageQualityNode = exportNode["ImageQuality"]) {
+			exp.ImageQuality = imageQualityNode.as<int>();
+		}
+
+		if (const auto& folderNode = exportNode["Folder"]) {
+			exp.Folder = folderNode.as<std::string>();
+		}
+	}
+
+	Log::Trace("SettingsSerializer::DeserializeExportSettings - Export Settings Deserialized");
 }
 
 #pragma endregion
