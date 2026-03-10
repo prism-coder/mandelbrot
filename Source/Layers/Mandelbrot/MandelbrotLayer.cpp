@@ -12,20 +12,22 @@
 
 #include "MandelbrotSerializer.h"
 
-MandelbrotLayer::MandelbrotLayer() {
-	m_Windows.emplace_back(CreateScope<AboutWindow>(m_AboutWindowOpen));
-	m_Windows.emplace_back(CreateScope<InspectorWindow>(m_InspectorWindowOpen, m_FractalState));
+#include <cstring>
 
-	auto projectWindow = CreateScope<ProjectWindow>(m_ProjectWindowOpen);
+MandelbrotLayer::MandelbrotLayer() {
+	m_Windows.emplace_back(CreateScope<AboutWindow>(SettingsManager::Get().Editor.Windows.ShowAbout));
+	m_Windows.emplace_back(CreateScope<InspectorWindow>(SettingsManager::Get().Editor.Windows.ShowInspector, m_FractalState));
+
+	auto projectWindow = CreateScope<ProjectWindow>(SettingsManager::Get().Editor.Windows.ShowProject);
 	projectWindow->SetConfigurationLoadCallback([this](const std::filesystem::path& filepath) {
 		LoadConfiguration(filepath);
 	});
 	m_Windows.emplace_back(std::move(projectWindow));
 
-	m_Windows.emplace_back(CreateScope<SettingsWindow>(m_SettingsWindowOpen));
-	m_Windows.emplace_back(CreateScope<StatisticsWindow>(m_StatisticsWindowOpen));
+	m_Windows.emplace_back(CreateScope<SettingsWindow>(SettingsManager::Get().Editor.Windows.ShowSettings));
+	m_Windows.emplace_back(CreateScope<StatisticsWindow>(SettingsManager::Get().Editor.Windows.ShowStatistics));
 
-	auto viewportWindow = CreateScope<ViewportWindow>(m_ViewportWindowOpen, m_FractalState);
+	auto viewportWindow = CreateScope<ViewportWindow>(SettingsManager::Get().Editor.Windows.ShowViewport, m_FractalState);
 	viewportWindow->SetConfigurationLoadCallback([this](const std::filesystem::path& filepath) {
 		LoadConfiguration(filepath);
 	});
@@ -41,12 +43,14 @@ void MandelbrotLayer::OnAttach() {
 		window->OnAttach();
 	}
 
-	const auto& settings = SettingsManager::Get().Application;
+	const auto& settings = SettingsManager::Get();
 
-	if (settings.StartupConfiguration.empty()) {
+	m_LastWindowsSettings = settings.Editor.Windows;
+
+	if (settings.Application.StartupConfiguration.empty()) {
 		LoadConfiguration(m_DefaultConfigurationFilepath);
 	} else {
-		LoadConfiguration(settings.StartupConfiguration);
+		LoadConfiguration(settings.Application.StartupConfiguration);
 	}
 }
 
@@ -61,7 +65,14 @@ void MandelbrotLayer::OnDetach() {
 }
 
 void MandelbrotLayer::OnUpdate(Timestep ts) {
-	m_FractalState.Update(ts);
+	// Auto-save when any window visibility changes.
+	const auto& currentWindows = SettingsManager::Get().Editor.Windows;
+	if (std::memcmp(&currentWindows, &m_LastWindowsSettings, sizeof(WindowsSettings)) != 0) {
+		m_LastWindowsSettings = currentWindows;
+		SettingsManager::Save();
+	}
+
+	m_FractalState.Update(ts, SettingsManager::Get().Navigation);
 
 	for (const auto& window : m_Windows) {
 		window->OnUpdate(ts);
@@ -122,9 +133,7 @@ void MandelbrotLayer::DrawMenuBar() {
 
 			UI::Separator();
 
-			if (ImGui::MenuItem("Settings", "Ctrl+,")) {
-				m_SettingsWindowOpen = true;
-			}
+			ImGui::MenuItem("Settings", "Ctrl+,", &SettingsManager::Get().Editor.Windows.ShowSettings);
 
 			UI::Separator();
 
@@ -149,11 +158,20 @@ void MandelbrotLayer::DrawMenuBar() {
 
 		// Export Menu
 		if (ImGui::BeginMenu("Export")) {
-			if (ImGui::MenuItem("Image (.png)")) {
+			const auto& fmt = SettingsManager::Get().Export.ImageFormat;
+			std::string imageLabel = "Image (." + [&fmt]() -> std::string {
+				switch (fmt) {
+					case ExportImageFormat::JPEG: return "jpg";
+					case ExportImageFormat::BMP:  return "bmp";
+					default:                      return "png";
+				}
+			}() + ")";
+
+			if (ImGui::MenuItem(imageLabel.c_str())) {
 				m_RequestExport = true;
 			}
 
-			UI::Tooltip("Export the current frame as a PNG image to the 'Export/Image' folder.");
+			UI::Tooltip("Export the current frame as an image to the Export/Image folder.");
 
 			if (ImGui::MenuItem("Configuration (.fractal)")) {
 				ExportConfiguration();
@@ -166,12 +184,14 @@ void MandelbrotLayer::DrawMenuBar() {
 
 		// View Menu
 		if (ImGui::BeginMenu("View")) {
-			ImGui::MenuItem("About", "F1", &m_AboutWindowOpen);
-			ImGui::MenuItem("Inspector", "Ctrl+I", &m_InspectorWindowOpen);
-			ImGui::MenuItem("Project", "Ctrl+P", &m_ProjectWindowOpen);
-			ImGui::MenuItem("Settings", "Ctrl+,", &m_SettingsWindowOpen);
-			ImGui::MenuItem("Statistics", "Ctrl+T", &m_StatisticsWindowOpen);
-			ImGui::MenuItem("Viewport", "Ctrl+V", &m_ViewportWindowOpen);
+			auto& windowsSettings = SettingsManager::Get().Editor.Windows;
+
+			ImGui::MenuItem("About",     "F1",     &windowsSettings.ShowAbout);
+			ImGui::MenuItem("Inspector", "Ctrl+I", &windowsSettings.ShowInspector);
+			ImGui::MenuItem("Project",   "Ctrl+P", &windowsSettings.ShowProject);
+			ImGui::MenuItem("Settings",  "Ctrl+,", &windowsSettings.ShowSettings);
+			ImGui::MenuItem("Statistics","Ctrl+T", &windowsSettings.ShowStatistics);
+			ImGui::MenuItem("Viewport",  "Ctrl+V", &windowsSettings.ShowViewport);
 
 			ImGui::EndMenu();
 		}
@@ -185,7 +205,7 @@ void MandelbrotLayer::DrawMenuBar() {
 			UI::Tooltip("Open the app documentation.");
 
 			if (ImGui::MenuItem("About")) {
-				m_AboutWindowOpen = true;
+				SettingsManager::Get().Editor.Windows.ShowAbout = true;
 			}
 
 			UI::Tooltip("Open the about window.");
@@ -279,7 +299,8 @@ bool MandelbrotLayer::LoadConfiguration(const std::filesystem::path& filepath) {
 }
 
 std::filesystem::path MandelbrotLayer::BuildExportPath(const std::filesystem::path& folder, const std::string& extension) {
-	CheckOrCreateFolder(m_ExportFilepath);
+	const std::filesystem::path exportRoot = SettingsManager::Get().Export.Folder;
+	CheckOrCreateFolder(exportRoot);
 	CheckOrCreateFolder(folder);
 
 	auto now = std::chrono::system_clock::now();
@@ -291,13 +312,25 @@ std::filesystem::path MandelbrotLayer::BuildExportPath(const std::filesystem::pa
 }
 
 void MandelbrotLayer::ExportFrameAsImage() {
-	auto filepath = BuildExportPath(m_ExportImageFilepath, ".png");
+	const auto& exportSettings = SettingsManager::Get().Export;
+
+	std::string ext;
+	switch (exportSettings.ImageFormat) {
+		case ExportImageFormat::JPEG:	ext = ".jpg";	break;
+		case ExportImageFormat::BMP:	ext = ".bmp";	break;
+		case ExportImageFormat::PNG:
+		default:						ext = ".png";	break;
+	}
+
+	const std::filesystem::path exportImageFolder = exportSettings.Folder / "Image";
+	auto filepath = BuildExportPath(exportImageFolder, ext);
 	Renderer::ExportFrame(filepath);
 	Log::Info("MandelbrotLayer::ExportFrameAsImage - Frame exported successfully to: " + filepath.string());
 }
 
 void MandelbrotLayer::ExportConfiguration() {
-	SaveConfiguration(BuildExportPath(m_ExportConfigurationFilepath, ".fractal"));
+	const std::filesystem::path exportConfigFolder = SettingsManager::Get().Export.Folder / "Configuration";
+	SaveConfiguration(BuildExportPath(exportConfigFolder, ".fractal"));
 }
 
 void MandelbrotLayer::CheckOrCreateFolder(const std::filesystem::path& filepath) {
@@ -317,28 +350,28 @@ void MandelbrotLayer::HandleKeyboardShortcuts() {
 		}
 
 		if (Input::IsKeyDown(KeyCode::P)) {
-			m_ProjectWindowOpen = !m_ProjectWindowOpen;
+			SettingsManager::Get().Editor.Windows.ShowProject = !SettingsManager::Get().Editor.Windows.ShowProject;
 		}
 
 		if (Input::IsKeyDown(KeyCode::Comma)) {
-			m_SettingsWindowOpen = !m_SettingsWindowOpen;
+			SettingsManager::Get().Editor.Windows.ShowSettings = !SettingsManager::Get().Editor.Windows.ShowSettings;
 		}
 
 		if (Input::IsKeyDown(KeyCode::I)) {
-			m_InspectorWindowOpen = !m_InspectorWindowOpen;
+			SettingsManager::Get().Editor.Windows.ShowInspector = !SettingsManager::Get().Editor.Windows.ShowInspector;
 		}
 
 		if (Input::IsKeyDown(KeyCode::T)) {
-			m_StatisticsWindowOpen = !m_StatisticsWindowOpen;
+			SettingsManager::Get().Editor.Windows.ShowStatistics = !SettingsManager::Get().Editor.Windows.ShowStatistics;
 		}
 
 		if (Input::IsKeyDown(KeyCode::V)) {
-			m_ViewportWindowOpen = !m_ViewportWindowOpen;
+			SettingsManager::Get().Editor.Windows.ShowViewport = !SettingsManager::Get().Editor.Windows.ShowViewport;
 		}
 	}
 
 	if (Input::IsKeyDown(KeyCode::F1)) {
-		m_AboutWindowOpen = !m_AboutWindowOpen;
+		SettingsManager::Get().Editor.Windows.ShowAbout = !SettingsManager::Get().Editor.Windows.ShowAbout;
 	}
 }
 

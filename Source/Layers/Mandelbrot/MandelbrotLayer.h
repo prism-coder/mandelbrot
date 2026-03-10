@@ -37,15 +37,11 @@ private:
 	void UpdateWindowTitle(const std::filesystem::path& filepath);
 	void AddToRecentConfigurations(const std::filesystem::path& filepath);
 private:
-	bool m_AboutWindowOpen = false;
-	bool m_InspectorWindowOpen = true;
-	bool m_ProjectWindowOpen = false;
-	bool m_SettingsWindowOpen = false;
-	bool m_StatisticsWindowOpen = false;
-	bool m_ViewportWindowOpen = true;
-
 	// Export Request
 	bool m_RequestExport = false;
+
+	// Window visibility snapshot for auto-save
+	WindowsSettings m_LastWindowsSettings;
 
 	// Fractal Data
 	FractalState m_FractalState;
@@ -53,11 +49,6 @@ private:
 	// Configuration Loading Data
 	const std::filesystem::path m_DefaultConfigurationFilepath = "Internal/Configurations/Default.fractal";
 	const std::filesystem::path m_PresetsFilepath = "Internal/Configurations/Presets/";
-
-	// Export Filepaths
-	const std::filesystem::path m_ExportFilepath = "Export";
-	const std::filesystem::path m_ExportImageFilepath = m_ExportFilepath / "Image";
-	const std::filesystem::path m_ExportConfigurationFilepath = m_ExportFilepath / "Configuration";
 
 	std::filesystem::path m_CurrentConfigurationFilepath;
 	std::filesystem::path m_ConfigurationFilepathToLoad;
