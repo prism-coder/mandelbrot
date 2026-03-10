@@ -8,12 +8,20 @@ Settings:
     Maximized: true
     DebugMode: false
     EscapeClosesApp: false
+    LogToFile: false
   Editor:
     Appearance:
       Theme: Excellency
       FontSize: 13
       UIScale: 1
       ColumnWidth: 200
+    Windows:
+      ShowAbout: false
+      ShowInspector: true
+      ShowProject: false
+      ShowSettings: false
+      ShowStatistics: false
+      ShowViewport: true
     AutoSaveInterval: 10
   Rendering:
     Engine: OpenGL
@@ -21,5 +29,18 @@ Settings:
       Width: 1920
       Height: 1080
       Scale: 1
-    Fullscreen: false
+    Mode: Windowed
     VSync: false
+    LockFramerate: false
+    TargetFrameRate: 0
+  Navigation:
+    MovementSpeed: 2
+    RotationSpeed: 2
+    ZoomSpeed: 2
+    PowerSpeed: 2
+    Smoothing: 5
+    InvertZoom: false
+  Export:
+    ImageFormat: PNG
+    ImageQuality: 90
+    Folder: Export
