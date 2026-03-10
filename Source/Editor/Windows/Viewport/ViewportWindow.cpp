@@ -28,6 +28,8 @@ void ViewportWindow::OnUpdate(Timestep ts) {
 	}
 
 	if (m_ViewportHovered) {
+		const auto& nav = SettingsManager::Get().Navigation;
+
 		glm::vec2 moveDirection = { 0.0f, 0.0f };
 
 		if (Input::IsMouseButtonPressed(MouseCode::ButtonLeft)) {
@@ -52,14 +54,17 @@ void ViewportWindow::OnUpdate(Timestep ts) {
 
 			glm::vec2 rotatedMoveDirection = rotationMatrix * moveDirection;
 
-			m_FractalState.Target.Position += rotatedMoveDirection * m_FractalState.MovementSpeed * (float)ts / m_FractalState.Target.Zoom;
+			m_FractalState.Target.Position += rotatedMoveDirection * nav.MovementSpeed * (float)ts / m_FractalState.Target.Zoom;
 		}
 
 		const auto& scrollOffset = Input::GetScrollOffset();
 		if (scrollOffset.y != 0.0f) {
-			double zoomFactor = 1.0f + m_FractalState.ZoomSpeed * ts * 10.0f;
+			double zoomFactor = 1.0f + nav.ZoomSpeed * ts * 10.0f;
 
-			if (scrollOffset.y > 0.0f) {
+			// Apply InvertZoom: positive scroll zooms in by default; negate when InvertZoom is true.
+			bool zoomIn = nav.InvertZoom ? (scrollOffset.y < 0.0f) : (scrollOffset.y > 0.0f);
+
+			if (zoomIn) {
 				m_FractalState.Target.Zoom *= zoomFactor;
 			} else {
 				m_FractalState.Target.Zoom /= zoomFactor;
@@ -67,29 +72,29 @@ void ViewportWindow::OnUpdate(Timestep ts) {
 		}
 
 		if (Input::IsKeyPressed(KeyCode::LeftShift)) {
-			m_FractalState.Target.Zoom += m_FractalState.ZoomSpeed * m_FractalState.Target.Zoom * ts;
+			m_FractalState.Target.Zoom += nav.ZoomSpeed * m_FractalState.Target.Zoom * ts;
 		} else if (Input::IsKeyPressed(KeyCode::LeftControl)) {
-			m_FractalState.Target.Zoom -= m_FractalState.ZoomSpeed * m_FractalState.Target.Zoom * ts;
+			m_FractalState.Target.Zoom -= nav.ZoomSpeed * m_FractalState.Target.Zoom * ts;
 		}
 
 		if (Input::IsKeyPressed(KeyCode::Q)) {
 			if (m_FractalState.Target.Rotation <= 0.0f) {
 				m_FractalState.Target.Rotation = 0.0f;
 			} else {
-				m_FractalState.Target.Rotation -= m_FractalState.RotationSpeed * 100.0f * ts;
+				m_FractalState.Target.Rotation -= nav.RotationSpeed * 100.0f * ts;
 			}
 		} else if (Input::IsKeyPressed(KeyCode::E)) {
 			if (m_FractalState.Target.Rotation >= 360.0f) {
 				m_FractalState.Target.Rotation = 360.0f;
 			} else {
-				m_FractalState.Target.Rotation += m_FractalState.RotationSpeed * 100.0f * ts;
+				m_FractalState.Target.Rotation += nav.RotationSpeed * 100.0f * ts;
 			}
 		}
 
 		if (Input::IsKeyPressed(KeyCode::PageUp)) {
-			m_FractalState.Target.Power += m_FractalState.PowerSpeed * ts;
+			m_FractalState.Target.Power += nav.PowerSpeed * ts;
 		} else if (Input::IsKeyPressed(KeyCode::PageDown)) {
-			m_FractalState.Target.Power -= m_FractalState.PowerSpeed * ts;
+			m_FractalState.Target.Power -= nav.PowerSpeed * ts;
 		}
 	}
 

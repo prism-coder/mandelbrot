@@ -2,6 +2,8 @@
 
 #include "Core/Timestep.h"
 
+#include "Core/Settings/Settings.h"
+
 #include "Mandelbrot.h"
 
 #include <glm/gtc/constants.hpp>
@@ -18,25 +20,17 @@ struct FractalState {
 	/// @brief The target state of the fractal parameters that is modified by user input and file uploads.
 	Mandelbrot Target;
 
-	/// @brief The smoothing factor for parameter interpolation. Higher values result in faster transitions.
-	float Smoothing = 5.0f;
-
-	// Speed for movement, rotation, zoom and power. A higher value = faster movement.
-	float MovementSpeed = 2.0f;
-	float RotationSpeed = 2.0f;
-	float ZoomSpeed = 2.0f;
-	float PowerSpeed = 2.0f;
-
 	/**
-	 * Updates the current state by interpolating towards the target state based on the elapsed time (Timestep).
-	 * This method should be called every frame with the time since the last frame to ensure smooth transitions between parameter changes.
+	 * Updates the current state by interpolating towards the target state based on the elapsed time (Timestep)
+	 * and the provided navigation settings.
 	 * 
 	 * @param ts The time elapsed since the last update, used to calculate the interpolation factor for smooth transitions.
+	 * @param nav The navigation settings that supply the smoothing factor for interpolation.
 	 */
-	void Update(Timestep ts) {
+	void Update(Timestep ts, const NavigationSettings& nav) {
 		// This is the formula for exponential interpolation, which is independent of the framerate
 		// and gives a very pleasant "acceleration and braking" feel.
-		float alpha = 1.0f - exp(-Smoothing * ts);
+		float alpha = 1.0f - exp(-nav.Smoothing * ts);
 
 		// We interpolate each of the parameters
 		Current.Power = glm::lerp(Current.Power, Target.Power, alpha);

@@ -55,25 +55,6 @@ void InspectorWindow::OnUIRender() {
 	Mandelbrot& mandelbrot = m_FractalState.Target;
 
 	if (ImGui::Begin("Inspector", &m_IsOpen)) {
-		if (UI::CollapsingHeader("Animation")) {
-			UI::SliderFloat("Smoothing Factor", m_FractalState.Smoothing, 0.1f, 20.0f);
-			UI::Tooltip("Controls the speed of transitions.\nHigher is faster.");
-
-			UI::SliderFloat("Movement Speed", m_FractalState.MovementSpeed, 0.01f, 10.0f);
-			UI::Tooltip("Controls the speed of the movement.\nHigher is faster.");
-
-			UI::SliderFloat("Rotation Speed", m_FractalState.RotationSpeed, 0.01f, 10.0f);
-			UI::Tooltip("Controls the speed of the rotation.\nHigher is faster.");
-
-			UI::SliderFloat("Zoom Speed", m_FractalState.ZoomSpeed, 0.01f, 10.0f);
-			UI::Tooltip("Controls the speed of the zoom.\nHigher is faster.");
-
-			UI::SliderFloat("Power Speed", m_FractalState.PowerSpeed, 0.01f, 10.0f);
-			UI::Tooltip("Controls the speed of the power change.\nHigher is faster.");
-
-			UI::Separator();
-		}
-
 		if (UI::CollapsingHeader("Fractal")) {
 			UI::Dropdown("Algorithm", m_FractalAlgorithms, mandelbrot.Algorithm, Utilities::FractalAlgorithmToString);
 			UI::Tooltip("Changes the core mathematical formula used to generate the fractal.");
