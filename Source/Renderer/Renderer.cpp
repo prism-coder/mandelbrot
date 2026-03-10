@@ -117,8 +117,29 @@ void Renderer::ExportFrame(const std::filesystem::path& filepath) {
 	// inverted compared to most image formats(0, 0 up).
 	stbi_flip_vertically_on_write(1);
 
-	// Use STB to write the pixels to a PNG file.
-	stbi_write_png(filepath.string().c_str(), width, height, 4, pixels.data(), width * 4);
+	const auto& exportSettings = SettingsManager::Get().Export;
+	const std::string pathStr = filepath.string();
+
+	switch (exportSettings.ImageFormat) {
+		case ExportImageFormat::JPEG: {
+			// JPEG does not support an alpha channel; drop it to RGB first.
+			std::vector<uint8_t> rgb(width * height * 3);
+			for (uint32_t i = 0; i < width * height; ++i) {
+				rgb[i * 3 + 0] = pixels[i * 4 + 0];
+				rgb[i * 3 + 1] = pixels[i * 4 + 1];
+				rgb[i * 3 + 2] = pixels[i * 4 + 2];
+			}
+			stbi_write_jpg(pathStr.c_str(), width, height, 3, rgb.data(), exportSettings.ImageQuality);
+			break;
+		}
+		case ExportImageFormat::BMP:
+			stbi_write_bmp(pathStr.c_str(), width, height, 4, pixels.data());
+			break;
+		case ExportImageFormat::PNG:
+		default:
+			stbi_write_png(pathStr.c_str(), width, height, 4, pixels.data(), width * 4);
+			break;
+	}
 }
 
 void Renderer::InitFramebuffer() {
