@@ -34,4 +34,10 @@ public:
 
 	static std::string DirectionToString(const Direction& direction);
 	static Direction StringToDirection(const std::string& direction);
+
+	static std::string WindowModeToString(const WindowMode& mode);
+	static WindowMode StringToWindowMode(const std::string& mode);
+
+	static std::string ExportImageFormatToString(const ExportImageFormat& format);
+	static ExportImageFormat StringToExportImageFormat(const std::string& format);
 };

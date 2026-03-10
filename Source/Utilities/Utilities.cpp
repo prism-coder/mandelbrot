@@ -134,6 +134,7 @@ std::string Utilities::CategoryToString(const Category& category) {
 		case Category::Quality:			return "Quality";
 		case Category::Rendering:		return "Rendering";
 		case Category::Time:			return "Time";
+		case Category::Export:			return "Export";
 		default:						return "Unknown";
 	}
 }
@@ -147,6 +148,7 @@ Category Utilities::StringToCategory(const std::string& category) {
 	if (category == "Quality")		return Category::Quality;
 	if (category == "Rendering")	return Category::Rendering;
 	if (category == "Time")			return Category::Time;
+	if (category == "Export")		return Category::Export;
 
 	Log::Error("Utilities::StringToCategory - Unknown Category");
 
@@ -256,4 +258,42 @@ Direction Utilities::StringToDirection(const std::string& direction) {
 	Log::Error("Utilities::StringToDirection - Unknown Direction");
 
 	return Direction::Left;
+}
+
+std::string Utilities::WindowModeToString(const WindowMode& mode) {
+	switch (mode) {
+		case WindowMode::Windowed:		return "Windowed";
+		case WindowMode::Fullscreen:	return "Fullscreen";
+		case WindowMode::Borderless:	return "Borderless";
+		default:						return "Unknown";
+	}
+}
+
+WindowMode Utilities::StringToWindowMode(const std::string& mode) {
+	if (mode == "Windowed")		return WindowMode::Windowed;
+	if (mode == "Fullscreen")	return WindowMode::Fullscreen;
+	if (mode == "Borderless")	return WindowMode::Borderless;
+
+	Log::Error("Utilities::StringToWindowMode - Unknown Window Mode");
+
+	return WindowMode::Windowed;
+}
+
+std::string Utilities::ExportImageFormatToString(const ExportImageFormat& format) {
+	switch (format) {
+		case ExportImageFormat::PNG:	return "PNG";
+		case ExportImageFormat::JPEG:	return "JPEG";
+		case ExportImageFormat::BMP:	return "BMP";
+		default:						return "Unknown";
+	}
+}
+
+ExportImageFormat Utilities::StringToExportImageFormat(const std::string& format) {
+	if (format == "PNG")	return ExportImageFormat::PNG;
+	if (format == "JPEG")	return ExportImageFormat::JPEG;
+	if (format == "BMP")	return ExportImageFormat::BMP;
+
+	Log::Error("Utilities::StringToExportImageFormat - Unknown Export Image Format");
+
+	return ExportImageFormat::PNG;
 }

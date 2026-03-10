@@ -20,7 +20,7 @@ enum class Category {
 	/// @brief Settings related to graphics rendering, such as resolution and rendering engine.
 	Graphics,
 
-	/// @brief Settings for input devices and controls.
+	/// @brief Settings for input devices and controls, including navigation speeds and scroll behaviour.
 	Input,
 
 	/// @brief Settings for language and regional preferences.
@@ -33,7 +33,38 @@ enum class Category {
 	Rendering,
 
 	/// @brief Settings related to time management within the application, such as frame rate and time.
-	Time
+	Time,
+
+	/// @brief Settings for image and configuration export, including format, quality, and output folder.
+	Export
+};
+
+/**
+ * Represents the window display mode for the application.
+ */
+enum class WindowMode {
+	/// @brief The application runs in a standard window with borders and title bar.
+	Windowed,
+
+	/// @brief The application runs in true fullscreen mode, taking over the display.
+	Fullscreen,
+
+	/// @brief The application runs in a borderless window that covers the entire screen.
+	Borderless
+};
+
+/**
+ * Represents the image format used when exporting frames.
+ */
+enum class ExportImageFormat {
+	/// @brief Portable Network Graphics — lossless, best quality.
+	PNG,
+
+	/// @brief JPEG — lossy compression, smaller file sizes.
+	JPEG,
+
+	/// @brief Windows Bitmap — uncompressed, large files.
+	BMP
 };
 
 /**
@@ -70,7 +101,7 @@ struct ResolutionSettings {
 };
 
 /**
- * Represents the rendering settings for the application, including the rendering engine, resolution, fullscreen mode, and VSync.
+ * Represents the rendering settings for the application, including the rendering engine, resolution, window mode, and VSync.
  * 
  * The rendering settings determine how the application renders graphics and can affect performance and visual quality.
  */
@@ -81,11 +112,17 @@ struct RenderingSettings {
 	/// @brief The resolution settings that specify the width, height, and scale of the application window.
 	ResolutionSettings Resolution;
 
-	/// @brief A boolean value that indicates whether the application should run in fullscreen mode or windowed mode.
-	bool Fullscreen = false;
+	/// @brief The window display mode: Windowed, Fullscreen, or Borderless.
+	WindowMode Mode = WindowMode::Windowed;
 
 	/// @brief A boolean value that indicates whether vertical synchronization (`VSync`) is enabled, which can help prevent screen tearing by synchronizing the frame rate of the application with the refresh rate of the monitor.
 	bool VSync = true;
+
+	/// @brief A boolean value that indicates whether to lock the frame rate to the target frame rate specified in `TargetFrameRate`.
+	bool LockFramerate = false;
+
+	/// @brief The target frame rate cap in frames per second.
+	int TargetFrameRate = 0;
 };
 
 /**
@@ -104,17 +141,25 @@ struct VersionSettings {
 	int Patch = 0;
 
 	/**
-	 * Retrieves the version name as a string in the format "vMajor.Minor.Patch".
-	 * This method constructs a version string by concatenating the major, minor, and patch version numbers with appropriate formatting.
+	 * Gets the version as a string in the format `Major` `.` `Minor` `.` `Patch`.
 	 * 
-	 * @return A string representing the version name, formatted as "vMajor.Minor.Patch".
-	 * @example If Major is 1, Minor is 0, and Patch is 0, this method will return "v1.0.0".
+	 * @return A string representation of the version number.
 	 */
-	const std::string GetName() const {
-		return "v" +
+	const std::string GetVersion() const {
+		return (
 			std::to_string(Major) + "." +
 			std::to_string(Minor) + "." +
-			std::to_string(Patch);
+			std::to_string(Patch)
+		);
+	}
+
+	/**
+	 * Gets the version name as a string in the format `v` `Major` `.` `Minor` `.` `Patch`.
+	 *
+	 * @return A string representation of the version name.
+	 */
+	const std::string GetName() const {
+		return "v" + GetVersion();
 	}
 };
 
@@ -141,6 +186,9 @@ struct ApplicationSettings {
 
 	/// @brief A boolean value that indicates whether pressing the Escape key should close the application, providing a quick way for users to exit the application using the keyboard.
 	bool EscapeClosesApp = false;
+
+	/// @brief A boolean value that indicates whether the application should write its log output to a file on disk.
+	bool LogToFile = false;
 };
 
 /**
@@ -216,6 +264,29 @@ struct AppearanceSettings {
 };
 
 /**
+ * Represents the default visibility of editor windows on startup.
+ */
+struct WindowsSettings {
+	/// @brief Whether the About window is visible on startup.
+	bool ShowAbout = false;
+
+	/// @brief Whether the Inspector window is visible on startup.
+	bool ShowInspector = true;
+
+	/// @brief Whether the Project window is visible on startup.
+	bool ShowProject = false;
+
+	/// @brief Whether the Settings window is visible on startup.
+	bool ShowSettings = false;
+
+	/// @brief Whether the Statistics window is visible on startup.
+	bool ShowStatistics = false;
+
+	/// @brief Whether the Viewport window is visible on startup.
+	bool ShowViewport = true;
+};
+
+/**
  * Represents the editor settings for the application, including appearance settings and auto-save interval.
  * 
  * The editor settings provide configuration options specific to the editor interface, allowing users to customize the appearance and behavior of the editor according to their preferences.
@@ -224,8 +295,48 @@ struct EditorSettings {
 	/// @brief The appearance settings that allow users to customize the visual aspects of the editor interface, such as the theme, font size, UI scale, and column width.
 	AppearanceSettings Appearance;
 
+	/// @brief The default visibility of editor windows on startup.
+	WindowsSettings Windows;
+
 	/// @brief The interval in minutes for the auto-save feature, which determines how frequently the editor automatically saves the user's work to prevent data loss.
 	int AutoSaveInterval = 10;
+};
+
+/**
+ * Represents settings that control the interactive navigation of the fractal viewport.
+ */
+struct NavigationSettings {
+	/// @brief Speed multiplier for panning/movement. Higher values move the view faster.
+	float MovementSpeed = 2.0f;
+
+	/// @brief Speed multiplier for rotation (Q/E keys). Higher values rotate faster.
+	float RotationSpeed = 2.0f;
+
+	/// @brief Speed multiplier for zooming (scroll wheel / Shift / Ctrl). Higher values zoom faster.
+	float ZoomSpeed = 2.0f;
+
+	/// @brief Speed multiplier for changing the fractal power (PageUp / PageDown keys).
+	float PowerSpeed = 2.0f;
+
+	/// @brief Smoothing factor for parameter interpolation. Higher values produce snappier, faster transitions.
+	float Smoothing = 5.0f;
+
+	/// @brief When enabled, the scroll wheel zoom direction is reversed.
+	bool InvertZoom = false;
+};
+
+/**
+ * Represents settings that control how fractal frames and configurations are exported.
+ */
+struct ExportSettings {
+	/// @brief The image format used when exporting a frame (PNG, JPEG, or BMP).
+	ExportImageFormat ImageFormat = ExportImageFormat::PNG;
+
+	/// @brief JPEG compression quality in the range [0, 100]. Only relevant when `ImageFormat` is JPEG.
+	int ImageQuality = 90;
+
+	/// @brief Root folder where exported images and configurations are placed.
+	std::filesystem::path Folder = "Export";
 };
 
 /**
@@ -237,9 +348,15 @@ struct Settings {
 	/// @brief The application settings that provide general configuration options for the application, such as its name, version, and behavior on startup.
 	ApplicationSettings Application;
 
-	/// @brief The rendering settings that determine how the application renders graphics, including the rendering engine, resolution, fullscreen mode, and VSync.
+	/// @brief The rendering settings that determine how the application renders graphics, including the rendering engine, resolution, window mode, and VSync.
 	RenderingSettings Rendering;
 
 	/// @brief The editor settings that provide configuration options specific to the editor interface, allowing users to customize the appearance and behavior of the editor.
 	EditorSettings Editor;
+
+	/// @brief The navigation settings that control viewport interaction speeds and behaviour.
+	NavigationSettings Navigation;
+
+	/// @brief The export settings that control the format and destination of exported images and configurations.
+	ExportSettings Export;
 };
