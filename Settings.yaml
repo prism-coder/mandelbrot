@@ -3,7 +3,7 @@ Settings:
     Name: Mandelbrot++
     Version:
       Major: 1
-      Minor: 1
+      Minor: 2
       Patch: 0
     Maximized: true
     DebugMode: false
@@ -14,7 +14,7 @@ Settings:
       Theme: Excellency
       FontSize: 13
       UIScale: 1
-      ColumnWidth: 200
+      ColumnWidth: 150
     Windows:
       ShowAbout: false
       ShowInspector: true
