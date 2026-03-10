@@ -13,6 +13,8 @@
 
 #include <iostream>
 #include <format>
+#include <thread>
+#include <chrono>
 
 /**
  * Converts a GLFW error code into a human-readable string representation.
@@ -233,8 +235,11 @@ void Application::Run() {
 
 	// Main application loop that continues until the window should close or the application is signaled to stop running.
 	while (!glfwWindowShouldClose(m_WindowHandle) && m_Running) {
+		// Record the frame start time for frame-rate limiting.
+		double frameStart = glfwGetTime();
+
 		// Calculate the time elapsed since the last frame to use for updating layers and managing timing.
-		float time = (float)glfwGetTime();
+		float time = (float)frameStart;
 		Timestep timestep = time - m_LastFrameTime;
 		m_LastFrameTime = time;
 
@@ -260,6 +265,16 @@ void Application::Run() {
 
 		// Poll for and process input events, which will trigger the appropriate callbacks for key input, mouse input, and other events.
 		glfwPollEvents();
+
+		// Apply frame-rate cap if a target is set (TargetFrameRate > 0) and frame rate locking is enabled.
+		if (m_Specification.LockFramerate && m_Specification.TargetFrameRate > 0) {
+			double targetDt = 1.0 / static_cast<double>(m_Specification.TargetFrameRate);
+			double elapsed = glfwGetTime() - frameStart;
+			
+			if (elapsed < targetDt) {
+				std::this_thread::sleep_for(std::chrono::duration<double>(targetDt - elapsed));
+			}
+		}
 	}
 
 	Log::Trace("Application::Run - Stopping the main loop");

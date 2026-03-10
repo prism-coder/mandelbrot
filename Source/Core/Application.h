@@ -60,6 +60,12 @@ struct ApplicationSpecification {
 
 	/// @brief A boolean flag indicating whether the application should log messages to a file.
 	bool LogToFile = true;
+
+	/// @brief A boolean flag indicating whether to lock the frame rate to the target frame rate specified in `TargetFrameRate`.
+	bool LockFramerate = false;
+
+	/// @brief The target frame rate cap in frames per second.
+	int TargetFrameRate = 0;
 };
 
 /**

@@ -16,9 +16,19 @@ Application* CreateApplication() {
 		settings.Rendering.Resolution.Width,
 		settings.Rendering.Resolution.Height
 	};
-	spec.ScreenMode = settings.Rendering.Fullscreen ? ScreenMode::Fullscreen : ScreenMode::Windowed;
+
+	switch (settings.Rendering.Mode) {
+		case WindowMode::Fullscreen:	spec.ScreenMode = ScreenMode::Fullscreen;	break;
+		case WindowMode::Borderless:	spec.ScreenMode = ScreenMode::Borderless;	break;
+		default:						spec.ScreenMode = ScreenMode::Windowed;		break;
+	}
+
 	spec.Maximized = settings.Application.Maximized;
-	spec.LogToFile = settings.Application.DebugMode;
+	spec.EscapeClosesApp = settings.Application.EscapeClosesApp;
+	spec.VSync = settings.Rendering.VSync;
+	spec.LogToFile = settings.Application.LogToFile;
+	spec.LockFramerate = settings.Rendering.LockFramerate;
+	spec.TargetFrameRate = settings.Rendering.TargetFrameRate;
 
 	Application* app = new Application(spec);
 	app->PushLayer(new MandelbrotLayer());
