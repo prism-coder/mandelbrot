@@ -1,148 +1,138 @@
-# Mandelbrot++
+<div align="center">
+  <img src="Internal/Icons/AppIcon/appicon.png" alt="Mandelbrot++ Logo" width="140"/>
 
-A high-performance, interactive Mandelbrot set explorer built with C++ and OpenGL. This application provides a comprehensive GUI for visualizing and exploring the intricate beauty of fractal mathematics, featuring real-time rendering, customizable parameters, and a vast collection of presets.
+  # Mandelbrot++
+
+  *A GPU-accelerated fractal explorer built on a custom C++20 rendering engine.*
+
+  <br/>
+
+  ![C++](https://img.shields.io/badge/C%2B%2B-20-00599C?style=flat&logo=cplusplus&logoColor=white)
+  ![OpenGL](https://img.shields.io/badge/OpenGL-4.6-5586A4?style=flat&logo=opengl&logoColor=white)
+  ![Platform](https://img.shields.io/badge/Windows-x64-0078D4?style=flat&logo=windows&logoColor=white)
+  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat)](LICENSE)
+
+  ![Premake](https://img.shields.io/badge/Build-Premake5-E8572A?style=flat&logo=cmake&logoColor=white)
+  ![Visual Studio 2022](https://img.shields.io/badge/Visual%20Studio-2022-5C2D91?style=flat&logo=visualtudio&logoColor=white)
+  ![Visual Studio 2026](https://img.shields.io/badge/Visual%20Studio-2026-5C2D91?style=flat&logo=visualstudio&logoColor=white)
+  ![ImGui](https://img.shields.io/badge/GUI-ImGui-9B59B6?style=flat)
+  ![GPU](https://img.shields.io/badge/Renderer-GPU%20Shaders-76B900?style=flat&logo=nvidia&logoColor=white)
+
+</div>
+
+## Screenshots
+
+<div align="center">
+
+| Default                                       | Elephant Valley                                       |
+|:---------------------------------------------:|:-----------------------------------------------------:|
+| ![Default Configuration](./Screenshots/0.png) | ![Elephant Valley Configuration](./Screenshots/1.png) |
+
+| Serpent's Eye Julia                                       | Electric Seahorse                                       |
+|:---------------------------------------------------------:|:-------------------------------------------------------:|
+| ![Serpent's Eye Julia Configuration](./Screenshots/2.png) | ![Electric Seahorse Configuration](./Screenshots/3.png) |
+
+| Project & Settings                                   |
+|:----------------------------------------------------:|
+| ![Project and Settings Windows](./Screenshots/4.png) |
+
+</div>
+
+## What is this?
+
+**Mandelbrot++** is an interactive explorer for the **Mandelbrot set** and related fractals, rendered entirely on the **GPU** via `GLSL` *shaders*. It started as an exercise in graphics programming and grew into a showcase of how complex mathematical domains (*fractal algorithms*, *coloring theory*, *coordinate transformations*) can be abstracted into clean, decoupled systems without sacrificing performance.
+
+The result is an application that runs at **interactive frame rates** even at high iteration counts, while remaining straightforward to extend with new algorithms, coloring modes, or export formats.
+
+## Architecture
+
+The engine is organized into independent, single-responsibility layers. Each concern (*rendering*, *serialization*, *UI*, *input*) lives in its own module with a clearly defined interface, making the codebase easy to navigate and extend:
+
+```
+Source/
+  Core/        - Application lifecycle, window management, layer stack
+  Renderer/    - OpenGL abstraction (shaders, framebuffers, draw calls)
+  Layers/      - Fractal logic layer, UI layer; composed at runtime
+  Editor/      - ImGui panels (Inspector, Viewport, Project, Settings...)
+  Utilities/   - Serialization, file I/O, image export
+  Platform/    - Platform-specific entry points
+```
+
+Key design decisions:
+- **GPU-first computation**: all fractal math lives in `GLSL` *fragment shaders*. The CPU only manages state and uploads uniforms, keeping the main thread free.
+- **Layer stack**: rendering and UI are separate layers composed by the application, following a pattern similar to game engine architecture.
+- **Data-driven configuration**: fractal parameters, view state, coloring, and orbit traps are fully described in `YAML` and round-trip cleanly through a typed serialization layer.
+- **Shader hot-path isolation**: coloring algorithms (*Step*, *Smooth*, *Distance Estimation*) and orbit trap types are self-contained shader modules, making it straightforward to add new ones without touching unrelated code.
 
 ## Features
 
-### Core Functionality
-- **Real-time Fractal Rendering**: GPU-accelerated rendering using OpenGL shaders for smooth, high-performance visualization
-- **Multiple Fractal Algorithms**: Support for Mandelbrot, Burning Ship, and Tricorn fractals
-- **Julia Set Mode**: Interactive exploration of Julia sets with customizable parameters
-- **High Precision**: Support for arbitrary power values and detailed iteration control
+### Fractal Algorithms
+- `Mandelbrot`, `Burning Ship`, and `Tricorn`
+- Arbitrary power exponents (Multibrot)
+- Julia set mode with live parameter tuning
 
-### Visualization Options
-- **Coloring Algorithms**:
-  - Step coloring for classic banded appearance
-  - Smooth coloring for continuous gradients
-  - Distance estimation for enhanced detail and lighting effects
-- **Color Palettes**: Extensive collection of predefined palettes with customizable frequency and offset
-- **Orbit Coloring**: Angle-based coloring for additional visual complexity
-- **Orbit Traps**: Various geometric shapes (points, circles, lines, boxes, crosses) for creative effects
+### Coloring System
+- **Step**: classic banded appearance
+- **Smooth**: continuous gradient via normalized iteration count
+- **Distance Estimation**: analytically-derived boundary lighting
+- Orbit coloring (*angle-based*) and orbit traps (`Point`, `Circle`, `Line`, `Box`, `Cross`)
+- Fully customizable color palettes with frequency and phase offset
 
 ### User Interface
-- **ImGui-based GUI**: Modern, customizable interface with docking support
-- **Multiple Windows**:
-  - Inspector: Real-time parameter adjustment
-  - Viewport: Main fractal display
-  - Project: Configuration management
-  - Statistics: Performance monitoring
-  - Settings: Application configuration
-  - About: Application information
-- **Theme Support**: 40+ built-in themes for UI customization
+- Dockable ImGui layout: `Inspector`, `Viewport`, `Project`, `Statistics`, `Settings`, `About`
+- 40+ built-in themes
+- Configurable font size and UI scale
 
-### Configuration Management
-- **Preset System**: Hundreds of curated fractal configurations organized by categories:
-  - Algorithmic Variations
-  - Artistic & Technical Showcase
-  - Julia's Realm
-  - Multibrot & Abstract
-  - The Classics
-- **Save/Load Configurations**: YAML-based configuration files for sharing and backup
-- **Recent Files**: Quick access to recently opened configurations
-
-### Export Capabilities
-- **Image Export**: Save high-resolution fractal images in various formats
-- **Configuration Export**: Share custom fractal parameters
-
-## Technical Details
-
-### Architecture
-- **Language**: C++20
-- **Graphics API**: OpenGL 4.6 with GLAD loader
-- **Windowing**: GLFW
-- **GUI**: Dear ImGui
-- **Math Library**: GLM (OpenGL Mathematics)
-- **Serialization**: YAML-CPP
-- **Image Handling**: stb_image
-- **Build System**: Premake 5
-
-### Performance Features
-- **GPU Acceleration**: All fractal computation performed on GPU via shaders
-- **Smooth Interpolation**: Exponential interpolation for parameter changes
-- **Multithreaded Building**: Parallel compilation support
-- **Optimized Rendering**: Efficient OpenGL state management
-
-### Platform Support
-- **Primary Platform**: Windows (x64)
-- **Build Configurations**:
-  - Debug: Full debugging symbols
-  - Release: Optimized with symbols
-  - Dist: Optimized without symbols, windowed app
+### Configuration & Export
+- Save and load configurations as `YAML` files
+- Hundreds of curated presets organized by category
+- High-resolution image export
+- Recent files list
 
 ## Building and Running
 
 ### Prerequisites
-- **Windows 10/11**
-- **Visual Studio 2022** with C++ development tools
-- **Git** for submodule management
+- Windows 10/11, Visual Studio 2022 or 2026, Git
 
 ### Setup
-1. Clone the repository with submodules:
+
+1. Clone the repository recursively to retrieve libraries
+
    ```bash
    git clone --recursive https://github.com/prism-coder/mandelbrot
+   ```
+
+2. Navigate to the newly created repository folder
+
+   ```bash
    cd mandelbrot
    ```
 
-2. Run the setup script:
+3. Run the setup script for your Visual Studio version:
+
    ```bash
-   # Windows VS2026:
-   Scripts/Setup/Windows-vs2026.bat
-
-   # Windows VS2022:
-   Scripts/Setup/Windows-vs2022.bat
+   Scripts/Setup/Windows-vs2022.bat   # VS 2022
+   Scripts/Setup/Windows-vs2026.bat   # VS 2026
    ```
 
-3. Build the project:
-   ```
-   Open Mandelbrot.sln(x) in Visual Studio and build
-   ```
+4. Open `Mandelbrot.sln` (or `Mandelbrot.slnx` depending on the version you used) in Visual Studio, select a configuration, and build.
 
-4. Run the application:
-   ```
-   bin/Release-windows-x86_64/Mandelbrot/Mandelbrot.exe
-   ```
+### Build Configurations
 
-### Dependencies
-The project uses git submodules for external dependencies:
-- **GLFW**: Window and input management
-- **GLAD**: OpenGL function loading
-- **ImGui**: GUI framework
-- **GLM**: Mathematics library
-- **YAML-CPP**: Configuration serialization
-- **stb**: Image loading utilities
-
-## Usage
-
-### Basic Navigation
-- **Zoom**: Mouse wheel or UI controls
-- **Pan**: Click and drag in viewport
-- **Rotate**: Shift + drag or rotation controls
-- **Reset View**: Double-click or reset button
-
-### Parameter Adjustment
-- Use the Inspector window to modify fractal parameters in real-time
-- Adjust power, bailout radius, iteration count, and coloring options
-- Enable Julia mode to explore Julia sets
-
-### Working with Configurations
-- Load presets from the Project window
-- Save custom configurations for later use
-- Export high-resolution images of your creations
-- Export the current fractal configuration
-
-### Customization
-- Choose from 40+ UI themes in Settings
-- Adjust font size, UI scale, and layout
-- Configure rendering resolution and performance options
+| Configuration   | Description                               |
+|-----------------|-------------------------------------------|
+| `Debug`         | Full debug symbols, no optimization       |
+| `Release`       | Optimized with symbols                    |
+| `Dist`          | Fully optimized, windowed app, no console |
 
 ## Configuration File Format
 
-Configurations are stored in YAML format with the following structure:
+Configurations are plain `YAML` and can be shared, version-controlled, or hand-edited:
 
 ```yaml
 Mandelbrot:
   FractalParameters:
-    Algorithm: Mandelbrot # Mandelbrot, Burning Ship, Tricorn
+    Algorithm: Mandelbrot   # Mandelbrot | BurningShip | Tricorn
     Power: 2.0
     Bailout: 16.0
     MaxIterations: 256
@@ -154,64 +144,41 @@ Mandelbrot:
     JuliaMode: false
     JuliaC: [-0.8, 0.156]
   ColoringParameters:
-    ExteriorColoring: Smooth # Step, Smooth, DistanceEstimation
-    InteriorColoring: Black # Black, White, CustomColor
+    ExteriorColoring: Smooth  # Step | Smooth | DistanceEstimation
+    InteriorColoring: Black   # Black | White | CustomColor
     InteriorColor: [0.0, 0.0, 0.0]
     ColorFrequency: 1.0
     ColorOffset: 0.0
     OrbitColoring: false
     DistanceScale: 50.0
     ColorPalette:
-      Colors: 
+      Colors:
         - [0.0, 0.0, 0.0]
         - [1.0, 0.0, 0.0]
         - [1.0, 1.0, 0.0]
         - [0.0, 1.0, 0.0]
   OrbitTrap:
-    Type: None # None, Point, Circle, Line, Box, Cross
+    Type: None   # None | Point | Circle | Line | Box | Cross
     P1: [0.0, 0.0]
     P2: [0.0, 0.0]
     Color: [1.0, 1.0, 1.0]
     Blend: 0.5
 ```
-
 ## Contributing
 
-Contributions are welcome! Please feel free to submit pull requests, report issues, or suggest new features.
+Pull requests, bug reports, and feature suggestions are welcome.
 
-### Development Setup
-1. Follow the building instructions above
-2. Use the Debug configuration for development
-3. Enable logging in settings for debugging
-
-### Code Style
-- Use C++20 features where appropriate
-- Follow the existing naming conventions
-- Document complex algorithms and shaders
-- Maintain separation between core engine and application logic
+- Use the `Debug` configuration for development
+- Follow the existing module boundaries when adding features
+- Document non-obvious shader math inline
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT - see [LICENSE](LICENSE) for details.
 
 ## Acknowledgments
 
-- **Mathematical Foundation**: Based on the work of Benoît Mandelbrot and other mathematicians in fractal geometry
-- **Libraries**: Thanks to the developers of GLFW, ImGui, GLM, and other dependencies
-- **Community**: Inspired by various fractal exploration tools and research
+- **Fractal mathematics:** Benoît Mandelbrot and the broader research community
+- **Libraries:** `GLFW`, `ImGui`, `GLM`, `yaml-cpp`, `stb`, `GLAD`.
 
-## Screenshots
-
-![Default Configuration](./Screenshots/0.png)
-
-![Elephant Valley Configuration](./Screenshots/1.png)
-
-![Serpent's Eye Julia Configuration](./Screenshots/2.png)
-
-![Electric Seahorse Configuration](./Screenshots/3.png)
-
-![Project and Settings Windows](./Screenshots/4.png)
-
----
-
-**Note**: This application requires a modern GPU with OpenGL 4.6 support for optimal performance. Integrated graphics may experience reduced frame rates with high iteration counts.
+> **Note**: *Requires a GPU with OpenGL 4.6 support. Integrated graphics may see reduced frame rates at high iteration counts.*
