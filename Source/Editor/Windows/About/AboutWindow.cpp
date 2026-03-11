@@ -30,8 +30,8 @@ void AboutWindow::OnUIRender() {
 	if (UI::CollapsingHeader("Application")) {
 		const auto& settings = SettingsManager::Get().Application;
 		std::string title = settings.Name;
-		std::string version = settings.Version.GetName();
-		std::string description = "A real-time 2D fractal explorer\nbuilt in C++ with OpenGL.";
+		std::string version = settings.Version.GetVersion();
+		std::string description = "A high-performance 2D fractal renderer and visualizer\nstructured around modern graphics engine principles.";
 		std::string author = "Prism | Software Developer";
 
 		UI::DisabledInputText("Name", title);
