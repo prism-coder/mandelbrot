@@ -5,8 +5,8 @@ Mandelbrot:
     Bailout: 512
     MaxIterations: 800
   ViewParameters:
-    Zoom: 2666.789
-    Position: [-1.7827444, 0]
+    Zoom: 2559.8745
+    Position: [-1.7827564, 0]
     Rotation: 0
   JuliaParameters:
     JuliaMode: false
