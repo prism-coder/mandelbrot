@@ -6,8 +6,9 @@
 // The maximum number of colors that our Shader will support
 constexpr int MAX_PALETTE_COLORS = 16;
 
+/// @brief Represents a color palette for the Mandelbrot set.
 struct Palette {
-    // The 'Colors' vector can be any size on the CPU for UI flexibility.
+    // The `Colors` vector can be any size on the CPU for UI flexibility.
     std::vector<glm::vec3> Colors;
 
     // These arrays are the ones we will actually send to the shader.
