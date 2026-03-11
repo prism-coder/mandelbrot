@@ -30,7 +30,7 @@ Settings:
       Height: 1080
       Scale: 1
     Mode: Windowed
-    VSync: false
+    VSync: true
     LockFramerate: false
     TargetFrameRate: 0
   Navigation:
